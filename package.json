@@ -1,0 +1,24 @@
+{
+  "name": "apinode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./index.js",
+    "build": "echo 'No build step required'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Junior Oliveira",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.3.1",
+    "sequelize": "^6.31.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
