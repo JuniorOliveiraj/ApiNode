@@ -5,7 +5,6 @@ const connection =require('../models/bd')
 router.get('/', (req, res) =>{
     res.json({message:'api funcionando 2'})
 });
-
 router.get('/users', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // Permite que qualquer origem acesse essa rota
   res.setHeader('Access-Control-Allow-Methods', 'GET'); // Define quais métodos HTTP são permitidos
