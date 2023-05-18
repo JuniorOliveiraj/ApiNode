@@ -4,8 +4,8 @@ require('dotenv').config();
 
 // Configurações de conexão com o banco de dados
 const connection = mysql.createConnection({
-  host: 'aws.connect.psdb.cloud',
-  user: 'gwdkoj05746cfhnh74c2',
+  host: process.env.CLOUD_BD,
+  user:  process.env.USER_BD,
   password: process.env.PASSWORD_BD,
   database: 'bd-oliveira',
   ssl: {
