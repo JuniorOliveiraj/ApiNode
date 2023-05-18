@@ -3,7 +3,8 @@ const connection =require('../models/bd')
 // const fazerRequisicaoLogin = require('../controller/login');
 // const User = require('../models/usuarios'); 
 router.get('/', (req, res) =>{
-    res.json({message:'api funcionando 2'})
+    //res.json({message:'api funcionando 2'})
+       res.redirect('https://canaa.vercel.app');
 });
 router.get('/users', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // Permite que qualquer origem acesse essa rota
