@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const connection = require('../models/bd');
 const authController = require('../controller/authController');
+const noticias = require('../controller/newsApiExterna')
 const jwt = require('jsonwebtoken');
 
 // const fazerRequisicaoLogin = require('../controller/login');
@@ -53,6 +54,26 @@ router.get('/login', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', '*');
   next();
 }, authController.login);
+
+
+router.get('/noticias/buscarNoticias', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+}, noticias.buscarNoticias);
+
+
+router.get('/favoritos/adicionar', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+}, noticias.adicionarNoticias);
+
+router.get('/favoritos/listar', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+}, noticias.listarFavoritas);
 
 router.get('/private', authenticateToken, authController.privateFunction);
 
