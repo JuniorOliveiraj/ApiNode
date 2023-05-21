@@ -1,0 +1,85 @@
+/**
+criar usuario
+**/
+
+CREATE TABLE `sis_usuario` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`ds_nome` VARCHAR(45),
+	`ds_email` VARCHAR(50),
+	`ds_telefone` VARCHAR(45),
+	`ds_status` INT,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+/*
+criando tabela de usuario 
+
+*/
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+/*
+inserindo usuario 
+
+*/
+
+INSERT INTO `users` (`name`, `email`, `password`)
+VALUES ('João da Silva', 'joao@example.com', '$2y$10$MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC');
+
+
+/*
+alteração da tabela usuarios 
+*/
+
+ALTER TABLE `users`
+ADD `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+/*
+*
+* tabela de noticias favoritas de usuario 
+*
+*/
+
+
+CREATE TABLE favorite_news (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  publishedAt VARCHAR(255) NOT NULL,
+  source_name VARCHAR(255) NOT NULL,
+  source_url VARCHAR(255) NOT NULL,
+  status INT NOT NULL
+);
+
+ALTER TABLE `favorite_news`
+ADD `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+
+CREATE TABLE `produtosAgro` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name_produto` varchar(255) NOT NULL,
+  `quantidade_produto` varchar(255) NOT NULL,
+  `valor_produto` varchar(255) NOT NULL,
+  `imagem_produto` varchar(255) NOT NULL,
+  `status_produto` int(11),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

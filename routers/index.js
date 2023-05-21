@@ -2,81 +2,44 @@ const router = require("express").Router();
 const connection = require('../models/bd');
 const authController = require('../controller/authController');
 const noticias = require('../controller/newsApiExterna')
+ const agro = require('../controller/produtos');
 const jwt = require('jsonwebtoken');
 
-// const fazerRequisicaoLogin = require('../controller/login');
-// const User = require('../models/usuarios'); 
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
+
+// Middleware para liberar os headers
+const allowHeadersMiddleware = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Permite acesso de qualquer origem
+  res.header('Access-Control-Allow-Headers', '*'); // Define os cabeçalhos permitidos
+  next();
+};
+
+router.use(allowHeadersMiddleware);
 router.get('/', (req, res) => {
   //res.json({message:'api funcionando 2'})
   res.redirect('https://canaa.vercel.app');
 });
-router.get('/users', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Permite que qualquer origem acesse essa rota
-  res.setHeader('Access-Control-Allow-Methods', 'GET'); // Define quais métodos HTTP são permitidos
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Define quais headers personalizados são permitidos
-
-  connection.query('SELECT * FROM users', (error, results) => {
-    if (error) {
-      console.error('Erro ao executar a consulta:', error);
-      res.status(500).json({ error: 'Erro ao recuperar usuários.' });
-      connection.end(); // Encerra a conexão em caso de erro na consulta
-      return;
-    }
-    res.json(results);
-    connection.end(); // Encerra a conexão em caso de erro na consulta
-  });
-});
-
 function authenticateToken(req, res, next) {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ error: 'Token de acesso não fornecido.' });
   }
-
   jwt.verify(token, key, (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Token de acesso inválido ou expirado.' });
     }
-    
     // Token válido, passar para a próxima função
     next();
   });
 }
-
-router.get('/register', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-}, authController.register);
-router.get('/login', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-}, authController.login);
-
-
-router.get('/noticias/buscarNoticias', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-}, noticias.buscarNoticias);
-
-
-router.get('/favoritos/adicionar', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-}, noticias.adicionarNoticias);
-
-router.get('/favoritos/listar', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  next();
-}, noticias.listarFavoritas);
-
+router.get('/register',  authController.register);
+router.get('/login', authController.login);
+router.get('/noticias/buscarNoticias',noticias.buscarNoticias);
+router.get('/favoritos/adicionar',noticias.adicionarNoticias);
+router.get('/favoritos/listar', noticias.listarFavoritas);
 router.get('/private', authenticateToken, authController.privateFunction);
-
+router.get('/produtos/adicionar', agro.addProdutos, authController.privateFunction);
+router.get('/produtos/listar-todos', agro.allProduct, authController.privateFunction);
 
 
 
