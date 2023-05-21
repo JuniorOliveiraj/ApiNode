@@ -7,12 +7,7 @@ function addProdutos(req, res) {
     // Verificar se o token de acesso foi fornecido
 
     try {
-        // Verificar se o token é válido e decodificar os dados do usuário
-
-        // Dados recebidos da requisição GET
         const { name, valor, quantidade, ativo, imagen } = req.query;
-
-        // Dados recebidos da requisição GET
         const data = {
             name_produto: name,
             valor_produto: valor,
@@ -43,8 +38,6 @@ function addProdutos(req, res) {
     }
 }
 
-
-
 function allProduct(req, res) {
     try {
         // Verificar se o token é válido e decodificar os dados do usuário
@@ -71,4 +64,27 @@ function allProduct(req, res) {
 
 
 
-module.exports = { addProdutos, allProduct }
+function deletProduto(req, res) {
+    const { id} = req.query;
+    if(!id){
+        return res.status(401).json({ error: 'produto não encontrado.' });
+    }
+    const data = id;
+    try {
+        connection.query('DELETE FROM produtosAgro WHERE ?', data, (err, result) => {
+            if (err) {
+                console.error('Erro ao inserir os dados no banco de dados:', err);
+                return res.status(500).json({ error: 'Erro interno do servidor.' });
+            }
+
+            return res.status(201).json({ message: 'Dados salvos com sucesso.' });
+        });
+    } catch (error) {
+        // O token é inválido ou expirou
+        return res.status(401).json({ error: 'Token de acesso inválido ou expirado.' });
+    }
+}
+
+
+
+module.exports = { addProdutos, allProduct, deletProduto }
