@@ -67,16 +67,27 @@ function login(req, res) {
       console.error('Erro ao consultar o banco de dados:', err);
       return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
-    if (results.length === 0 || results[0].password !== password) {
-      return res.status(401).json({ error: 'Credenciais inválidas.' });
+  
+    if (results.length === 0) {
+      // Caso o resultado da consulta seja vazio, significa que o e-mail é inválido
+      return res.status(401).json({ error: 'email incorreto.' });
     }
+  
     const user = results[0];
+  
+    if (user.password !== password) {
+      // Caso a senha não corresponda à senha do usuário, retorna senha inválida
+      return res.status(401).json({ error: 'Senha inválida.' });
+    }
+  
     // Gerar um token de autenticação usando a biblioteca JWT
     const token = jwt.sign({ user_id: user.id }, key, { algorithm: 'HS256' });
     // Retornar o token como resposta
     return res.json({ token, user });
   });
+  
 }
+
 function privateFunction(req, res) {
   // Verificar se o token de acesso foi fornecido
   const token = req.headers.authorization;
