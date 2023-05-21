@@ -5,13 +5,9 @@ const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 // Função da rota privada
 function addProdutos(req, res) {
     // Verificar se o token de acesso foi fornecido
-    const token = req.headers.authorization;
-    if (!token) {
-        return res.status(401).json({ error: 'Token de acesso não fornecido.' });
-    }
+
     try {
         // Verificar se o token é válido e decodificar os dados do usuário
-        const decoded = jwt.verify(token, key);
 
         // Dados recebidos da requisição GET
         const { name, valor, quantidade, ativo, imagen } = req.query;
