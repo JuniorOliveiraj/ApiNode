@@ -42,7 +42,7 @@ router.get('/produtos/adicionar', agro.addProdutos);
 router.get('/produtos/listar-todos', agro.allProduct);
 router.get('/produtos/delet', agro.deletProduto);
 
-
+router.get('/produtos/prvate',authController.privateFunction, authenticateToken);
 
 
 
