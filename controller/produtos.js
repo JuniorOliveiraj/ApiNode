@@ -64,24 +64,30 @@ function allProduct(req, res) {
 
 
 
-function deletProduto(req, res) {
-    const { id} = req.query;
-    if(!id){
-        return res.status(401).json({ error: 'produto não encontrado.' });
+function deletarProduto(req, res) {
+    const { id } = req.query;
+    if (!id) {
+        return res.status(401).json({ error: 'Produto não encontrado.' });
     }
-    const data = id;
+  
     try {
-        connection.query('DELETE FROM produtosAgro WHERE ?', data, (err, result) => {
+        connection.query('DELETE FROM produtosAgro WHERE id = ?', id, (err, result) => {
             if (err) {
-                console.error('Erro ao inserir os dados no banco de dados:', err);
+                console.error('Erro ao deletar dados no banco de dados:', err);
                 return res.status(500).json({ error: 'Erro interno do servidor.' });
             }
 
-            return res.status(201).json({ message: 'Dados salvos com sucesso.' });
+            if (result.affectedRows === 0) {
+                // Nenhum registro foi afetado, o produto com o ID especificado não existe
+                return res.status(404).json({ error: 'Produto não encontrado.' });
+            }
+
+            return res.status(200).json({ message: 'Produto deletado com sucesso.' });
         });
     } catch (error) {
-        // O token é inválido ou expirou
-        return res.status(401).json({ error: 'Token de acesso inválido ou expirado.' });
+        // Ocorreu um erro ao executar a query
+        console.error('Erro interno do servidor:', error);
+        return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
 }
 
