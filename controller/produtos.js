@@ -64,7 +64,7 @@ function allProduct(req, res) {
 
 
 
-function deletarProduto(req, res) {
+function deletProduto(req, res) {
     const { id } = req.query;
     if (!id) {
         return res.status(401).json({ error: 'Produto não encontrado.' });
