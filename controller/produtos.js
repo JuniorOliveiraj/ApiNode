@@ -40,10 +40,13 @@ function addProdutos(req, res) {
 
 function allProduct(req, res) {
     try {
-        // Verificar se o token é válido e decodificar os dados do usuário
-       
+               // Verificar se o token é válido e decodificar os dados do usuário
+        const token = req.headers.authorization;
+        if (!token) {
+          return res.status(401).json({ error: 'Token de acesso não fornecido.' });
+        }
         // Dados recebidos da requisição GET
-    
+        const decoded = jwt.verify(token, key);
 
         // Dados recebidos da requisição GET
         connection.query('SELECT * FROM produtosAgro where status_produto = 1', (error, results) => {
