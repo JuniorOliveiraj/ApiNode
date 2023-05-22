@@ -46,7 +46,7 @@ function allProduct(req, res) {
     
 
         // Dados recebidos da requisição GET
-        connection.query('SELECT * FROM produtosAgro ', (error, results) => {
+        connection.query('SELECT * FROM produtosAgro where status_produto = 1', (error, results) => {
             if (error) {
                 console.error('Erro ao executar a consulta:', error);
                 res.status(500).json({ error: 'Erro ao recuperar usuários.' });
