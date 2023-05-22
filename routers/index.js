@@ -39,7 +39,7 @@ router.get('/favoritos/adicionar',noticias.adicionarNoticias);
 router.get('/favoritos/listar', noticias.listarFavoritas);
 router.get('/private', authenticateToken, authController.privateFunction);
 router.get('/produtos/adicionar', agro.addProdutos);
-router.get('/produtos/listar-todos', agro.allProduct);
+router.get('/produtos/listar-todos', agro.allProduct, authenticateToken);
 router.get('/produtos/delet', agro.deletProduto);
 
 router.get('/produtos/prvate',authController.privateFunction, authenticateToken);
