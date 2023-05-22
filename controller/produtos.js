@@ -46,7 +46,7 @@ function allProduct(req, res) {
     
 
         // Dados recebidos da requisição GET
-        connection.query('SELECT * FROM produtosAgro where status_produto = 1', (error, results) => {
+        connection.query('SELECT * FROM produtosAgro ', (error, results) => {
             if (error) {
                 console.error('Erro ao executar a consulta:', error);
                 res.status(500).json({ error: 'Erro ao recuperar usuários.' });
@@ -71,7 +71,7 @@ function deletProduto(req, res) {
     }
   
     try {
-        connection.query('DELETE FROM produtosAgro WHERE id = ?', id, (err, result) => {
+        connection.query('UPDATE produtosAgro SET status_produto = 0 WHERE id = ?', id, (err, result) => {
             if (err) {
                 console.error('Erro ao deletar dados no banco de dados:', err);
                 return res.status(500).json({ error: 'Erro interno do servidor.' });
