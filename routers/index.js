@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const connection = require('../models/bd');
 const authController = require('../controller/authController');
 const noticias = require('../controller/newsApiExterna')
- const agro = require('../controller/produtos');
+const agro = require('../controller/produtos');
+const cartao = require('../controller/gastos/gastosCartao')
 const jwt = require('jsonwebtoken');
 
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
@@ -32,17 +32,19 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
-router.get('/register',  authController.register);
+router.get('/register', authController.register);
 router.get('/login', authController.login);
-router.get('/noticias/buscarNoticias',noticias.buscarNoticias);
-router.get('/favoritos/adicionar',noticias.adicionarNoticias);
+router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
+router.get('/favoritos/adicionar', noticias.adicionarNoticias);
 router.get('/favoritos/listar', noticias.listarFavoritas);
 router.get('/private', authenticateToken, authController.privateFunction);
 router.get('/produtos/adicionar', agro.addProdutos);
 router.get('/produtos/listar-todos', agro.allProduct, authenticateToken);
 router.get('/produtos/delet', agro.deletProduto);
+router.get('/produtos/prvate', authController.privateFunction, authenticateToken);
+router.get('/gatos/cartao', cartao.FaturaCaro);
+router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken );
 
-router.get('/produtos/prvate',authController.privateFunction, authenticateToken);
 
 
 

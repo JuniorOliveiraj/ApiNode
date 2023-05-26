@@ -1,6 +1,6 @@
 // Importe as dependências necessárias (jwt, connection, etc.)
-const jwt = require('jsonwebtoken');
 const connection = require('../models/bd'); // Importe a configuração de conexão com o banco de dados
+const jwt = require('jsonwebtoken');
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 // Função da rota privada
 function addProdutos(req, res) {

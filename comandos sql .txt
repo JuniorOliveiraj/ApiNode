@@ -83,3 +83,17 @@ CREATE TABLE `produtosAgro` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+CREATE TABLE compras_cartao (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_user INT,
+  compra_nome VARCHAR(255),
+  compra_data DATE,
+  compra_hora TIME,
+  compra_valor DECIMAL(10,2),
+  compra_status INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
