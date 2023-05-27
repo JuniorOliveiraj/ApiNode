@@ -67,28 +67,35 @@ function executeQuery(sql, values) {
 
 
 function buscarGastosUsuario(req, res) {
-    const { userID } = req.query;
+    const { userID, dataAtual } = req.query;
     if (!userID) {
         return res.status(501).json({ message: 'Nenhum id entregue.' });
     }
+
+    const data = new Date(); // Aqui você substituirá pela sua data
+    const mes = moment(data).month() + 1; // +1 porque os meses em Moment.js são baseados em zero
+    console.log(mes)
+
+
+
     const token = req.headers.authorization;
     if (!token) {
         return res.status(401).json({ error: 'Token de acesso não fornecido.' });
     }
     // Dados recebidos da requisição GET
     const decoded = jwt.verify(token, key);
-    const sql = 'SELECT * FROM compras_cartao WHERE id_user = ? AND compra_status = 1 ORDER BY compra_data';
-  
-    connection.query(sql, [userID], (err, result) => {
-      if (err) {
-        console.error('Erro ao buscar os gastos no banco de dados:', err);
-        return res.status(500).json({ message: 'Erro ao buscar os gastos.' });
-      }
-  
-      const gastos = result;
-      const valorTotal = gastos.reduce((total, compra) => total + parseFloat(compra.compra_valor), 0);
-  
-      return res.status(200).json({ gastos, valorTotal });
+    const sql = 'SELECT * FROM compras_cartao WHERE id_user = ? AND compra_status = 1 AND MONTH(compra_data) = ? ORDER BY compra_data';
+
+    connection.query(sql, [userID , mes], (err, result) => {
+        if (err) {
+            console.error('Erro ao buscar os gastos no banco de dados:', err);
+            return res.status(500).json({ message: 'Erro ao buscar os gastos.' });
+        }
+
+        const gastos = result;
+        const valorTotal = gastos.reduce((total, compra) => total + parseFloat(compra.compra_valor), 0);
+
+        return res.status(200).json({ gastos, valorTotal });
     });
-  }
+}
 module.exports = { FaturaCaro, buscarGastosUsuario };
