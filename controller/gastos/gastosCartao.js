@@ -11,6 +11,7 @@ async function FaturaCaro(req, res) {
     }
 
     const regex = /💳(.*?)\nData: (\d{2}\/\d{2}\/\d{4}) às (\d{2}:\d{2})\nValor: R\$ ([\d,]+) à vista\nStatus: (\w+)/g;
+    const regex2 = /💳(.*?)\n\*Data\*\: (\d{2}\/\d{2}\/\d{4}) às (\d{2}:\d{2})\n\*Valor\*\: R\$ ([\d,]+) à vista\n\*Status\*\: (\w+)/g;
 
     const compras = [];
     let match;
@@ -20,10 +21,18 @@ async function FaturaCaro(req, res) {
         compras.push({ nome, data, hora, valor, status });
     }
 
+    if (compras.length === 0) { 
+        while ((match = regex2.exec(gastos))) {
+            const [_, nome, data, hora, valor, status] = match;
+            compras.push({ nome, data, hora, valor, status });
+        }
+    }
+
+
+
     if (compras.length === 0) {
         return res.status(501).json({ message: 'Nenhum dado de compra encontrado.' });
     }
-
     const sqlCheck = 'SELECT * FROM compras_cartao WHERE compra_nome = ? AND compra_data = ? AND compra_hora = ? AND compra_valor = ? AND id_user = ?';
     const sqlInsert = 'INSERT INTO compras_cartao (compra_nome, compra_data, compra_hora, compra_valor, compra_status, id_user) VALUES (?, ?, ?, ?, ?, ?)';
 
