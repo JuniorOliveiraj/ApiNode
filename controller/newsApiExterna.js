@@ -1,7 +1,7 @@
 
 const axios = require('axios');
 const connection = require('../models/bd');
-const apiKey = '8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
+const apiKey ='858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
 const buscarNoticias = async (req, res) => {
   try {
     // Chave de API para acessar a GNews.io
