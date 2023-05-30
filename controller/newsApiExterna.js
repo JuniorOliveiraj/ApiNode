@@ -160,6 +160,7 @@ const adicionarNoticias = async (req, res) => {
     const id = req.query.id;
     const noticia = req.query.noticia;
     const status = req.query.status;
+    const news_id = req.query.news_id;
 
     if (!id || !noticia || !status) {
       return res.status(401).json({ error: 'Algum parâmetro está vazio.' });
@@ -176,11 +177,12 @@ const adicionarNoticias = async (req, res) => {
       source_name: noticia.source.name,
       source_url: noticia.source.url,
       status: status,
+      news_id: news_id
     };
 
     // Execute a query para adicionar a notícia ao banco
-    const query = `INSERT INTO favorite_news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO favorite_news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, news_id)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [
       response.user_id,
       response.title,
@@ -192,6 +194,7 @@ const adicionarNoticias = async (req, res) => {
       response.source_name,
       response.source_url,
       response.status,
+      response.news_id
     ];
 
     // Execute a query usando a conexão direta
@@ -212,7 +215,7 @@ const adicionarNoticias = async (req, res) => {
 const listarFavoritas = (req, res) => {
   try {
     const id = req.query.id;
-
+    const news_id = req.query.id;
     // Verificar se o ID do usuário foi fornecido
     if (!id) {
       return res.status(400).json({ error: 'ID do usuário não fornecido' });
@@ -231,6 +234,7 @@ const listarFavoritas = (req, res) => {
 
       // Formatar os resultados no formato desejado
       const noticias = results.map(noticia => ({
+        id: noticia.news_id,
         status: noticia.status,
         title: noticia.title,
         content: noticia.content,
