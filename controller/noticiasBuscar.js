@@ -1,7 +1,7 @@
 const connection = require('../models/bd');
 
 
-const listaridNoticia = (req, res) => {
+const listaridNoticia = async (req, res) => {
     try {
         const id = req.query.id;
         // Verificar se o ID do usuário foi fornecido
@@ -12,7 +12,8 @@ const listaridNoticia = (req, res) => {
         // Montar a query para buscar as notícias favoritas
         const query = `SELECT * FROM news where id = ? ORDER BY created_at`;
         const values = [id];
-
+        const update = `UPDATE news SET lida = 1 WHERE id = ?`
+        const result = await executeQuery(update, values);
         // Executar a query usando a conexão do pool
         connection.query(query, values, (err, results) => {
             if (err) {
@@ -45,7 +46,17 @@ const listaridNoticia = (req, res) => {
     }
 };
 
-
+function executeQuery(sql, values) {
+    return new Promise((resolve, reject) => {
+      connection.query(sql, values, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
 
 
 

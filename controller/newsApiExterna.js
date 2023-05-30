@@ -80,7 +80,7 @@ const buscarNoticias = async (req, res) => {
         }
       }
       if (!pesquisa) {
-        const sql = `SELECT * FROM news where q=? ORDER BY created_at;`;
+        const sql = `SELECT * FROM news where q=? ORDER BY created_at`;
         const result = await executeQuery(sql, q);
 
         const noticias2 = result.map(noticia => ({
@@ -115,10 +115,11 @@ const buscarNoticias = async (req, res) => {
       // // if (response.data.errors[0] === errorMessage) {
       // //   return res.json({ message: 'Limite de requisições diárias excedido' });
       // // }
-      const sql = `SELECT * FROM news ORDER BY created_at`;
+      const sql = `SELECT * FROM news  ORDER BY created_at`;
       const result = await executeQuery(sql, []);
 
       const noticias2 = result.map(noticia => ({
+         id:noticia.id,
         status: noticia.status,
         title: noticia.title,
         content: noticia.content,
