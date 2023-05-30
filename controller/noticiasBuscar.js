@@ -1,0 +1,54 @@
+const connection = require('../models/bd');
+
+
+const listaridNoticia = (req, res) => {
+    try {
+        const id = req.query.id;
+        // Verificar se o ID do usuário foi fornecido
+        if (!id) {
+            return res.status(400).json({ error: 'ID do usuário não fornecido' });
+        }
+
+        // Montar a query para buscar as notícias favoritas
+        const query = `SELECT * FROM news where id = ? ORDER BY created_at`;
+        const values = [id];
+
+        // Executar a query usando a conexão do pool
+        connection.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Erro ao buscar as notícias favoritas:', err);
+                return res.status(500).json({ error: 'Erro interno do servidor' });
+            }
+
+            // Formatar os resultados no formato desejado
+            const noticias = results.map(noticia => ({
+                id: noticia.id,
+                status: noticia.status,
+                title: noticia.title,
+                content: noticia.content,
+                description: noticia.description,
+                image: noticia.image,
+                publishedAt: noticia.publishedAt,
+                url: noticia.url,
+                source: {
+                    name: noticia.source_name,
+                    url: noticia.source_url
+                }
+            }));
+
+            // Retornar as notícias favoritas em formato JSON
+            return res.json(noticias);
+        });
+    } catch (error) {
+        console.error('Erro:', error.message);
+        return res.status(500).json({ error: 'Erro ao buscar as notícias favoritas' });
+    }
+};
+
+
+
+
+
+module.exports = {
+    listaridNoticia
+}

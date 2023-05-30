@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const authController = require('../controller/authController');
-const noticias = require('../controller/newsApiExterna')
+const noticias = require('../controller/newsApiExterna');
+const noticiasBuscar = require('../controller/noticiasBuscar');
 const agro = require('../controller/produtos');
-const cartao = require('../controller/gastos/gastosCartao')
+const cartao = require('../controller/gastos/gastosCartao');
 const jwt = require('jsonwebtoken');
 
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
@@ -44,6 +45,7 @@ router.get('/produtos/delet', agro.deletProduto);
 router.get('/produtos/prvate', authController.privateFunction, authenticateToken);
 router.get('/gatos/cartao', cartao.FaturaCaro);
 router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken );
+router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 
 
 
