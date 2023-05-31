@@ -80,7 +80,7 @@ const buscarNoticias = async (req, res) => {
         }
       }
       if (!pesquisa) {
-        const sql = `SELECT * FROM news where q=? ORDER BY created_at`;
+        const sql = `SELECT * FROM news where q=? ORDER BY created_at DESC`;
         const result = await executeQuery(sql, q);
 
         const noticias2 = result.map(noticia => ({
