@@ -1,7 +1,7 @@
 
 const axios = require('axios');
 const connection = require('../models/bd');
-const apiKey ='858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
+const apiKey =  '858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
 const buscarNoticias = async (req, res) => {
   try {
     // Chave de API para acessar a GNews.io
@@ -84,7 +84,7 @@ const buscarNoticias = async (req, res) => {
         const result = await executeQuery(sql, q);
 
         const noticias2 = result.map(noticia => ({
-          id:noticia.id,
+          id: noticia.id,
           status: noticia.status,
           title: noticia.title,
           content: noticia.content,
@@ -115,11 +115,11 @@ const buscarNoticias = async (req, res) => {
       // // if (response.data.errors[0] === errorMessage) {
       // //   return res.json({ message: 'Limite de requisições diárias excedido' });
       // // }
-      const sql = `SELECT * FROM news  ORDER BY created_at`;
+      const sql = `SELECT * FROM news ORDER BY created_at DESC`;
       const result = await executeQuery(sql, []);
 
       const noticias2 = result.map(noticia => ({
-         id:noticia.id,
+        id: noticia.id,
         status: noticia.status,
         title: noticia.title,
         content: noticia.content,
@@ -152,7 +152,33 @@ const buscarNoticias = async (req, res) => {
     // Trata a exceção aqui...
     // Exibe a mensagem de erro ou registra o erro em um arquivo de log
     console.error('Erro:', error.message);
-    return res.status(500).json({ message: 'Erro ao buscar notícias' });
+    const sql = `SELECT * FROM news ORDER BY created_at DESC`;
+    const result = await executeQuery(sql, []);
+
+    const noticias2 = result.map(noticia => ({
+      id: noticia.id,
+      status: noticia.status,
+      title: noticia.title,
+      content: noticia.content,
+      description: noticia.description,
+      image: noticia.image,
+      publishedAt: noticia.publishedAt,
+      url: noticia.url,
+      source: {
+        name: noticia.source_name,
+        url: noticia.source_url
+      }
+    }));
+
+    const noticias = {
+      totalArticles: noticias2.length,
+      articles: noticias2,
+    };
+    // Retornar as notícias favoritas em formato JSON
+    if (!noticias) {
+      return res.status(500).json({ message: 'Erro ao buscar notícias' });
+    }
+    return res.json(noticias);
   }
 }
 
