@@ -35,6 +35,7 @@ function authenticateToken(req, res, next) {
 }
 router.get('/register', authController.register);
 router.get('/login', authController.login);
+router.get('/users/list', authController.userList, authenticateToken);
 router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
 router.get('/favoritos/adicionar', noticias.adicionarNoticias);
 router.get('/favoritos/listar', noticias.listarFavoritas);
