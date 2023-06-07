@@ -124,12 +124,12 @@ const userList = async (req, res) => {
         if (results.length > 0) {
           const usersAll = results.map(user => ({
             id: user.id,
-            avatarUrl:user.avatarUrl,
+            avatarUrl: user.avatarUrl,
             name: user.name,
             company: user.company,
             isVerified: true,
-            status: user.status === 1 ? 'active': 'não' ,
-            role:user.role  ,
+            status: user.status === 1 ? 'active' : 'não',
+            role: user.role,
           }));
           return res.status(200).json({ usersAll });
         } else {
@@ -141,9 +141,34 @@ const userList = async (req, res) => {
     return res.status(500).json({ error: 'Token de acesso expirado ou invalido' });
   }
 }
+
+function updateUser(req, res) {
+  const { userID, form, urlImg } = req.query;
+
+  const { email, name, role, company } = form;
+  const decoded = jwt.verify(token, key);
+  if (decoded) {
+    // Montar a query SQL
+    const sql = `UPDATE users SET email = ?, name = ?, role = ?, company = ?, avatarUrl = ? WHERE id = ?`;
+    const values = [email, name, role, company, urlImg, userID];
+
+    // Executar a query no banco de dados
+    connection.query(sql, values, (err, result) => {
+      if (err) {
+        console.error('Erro ao atualizar o usuário:', err);
+        res.status(500).json({ error: 'Erro ao atualizar o usuário' });
+      } else {
+
+        console.log('Usuário atualizado com sucesso!');
+        res.status(200).json({ message: 'Usuário atualizado com sucesso!' });
+      }
+    });
+  }
+}
 module.exports = {
   register,
   login,
   privateFunction,
-  userList
+  userList,
+  updateUser
 };
