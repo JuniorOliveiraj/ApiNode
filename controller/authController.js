@@ -143,9 +143,16 @@ const userList = async (req, res) => {
 }
 
 function updateUser(req, res) {
+  const token = req.headers.authorization;
   const { userID, form, urlImg } = req.query;
-
+  if (!userID || !form || !urlImg) {
+    res.status(500).json({ message: 'todos os dados devem ser mandado na requisição', });
+  }
   const { email, name, role, company } = form;
+  const values22 = [email, name, role, company, urlImg, userID];
+  if (!email || !name || !role || !company) {
+    res.status(500).json({ message: 'form vazio',form:form});
+  }
   const decoded = jwt.verify(token, key);
   if (decoded) {
     // Montar a query SQL
@@ -158,9 +165,20 @@ function updateUser(req, res) {
         console.error('Erro ao atualizar o usuário:', err);
         res.status(500).json({ error: 'Erro ao atualizar o usuário' });
       } else {
-
+        const sql2 = 'select * from users where id = ?'
         console.log('Usuário atualizado com sucesso!');
-        res.status(200).json({ message: 'Usuário atualizado com sucesso!' });
+        connection.query(sql2, [userID], (error, result2) => {
+          if (error) {
+            res.status(500).json({ message: 'Erro interno do servidor. Nada encontrado.' });
+          } else {
+            const row = result2[0];
+            row.token = token; // Adiciona a propriedade token ao objeto
+        
+            res.status(200).json({ message: 'Usuário atualizado com sucesso!', user: row });
+          }
+        });
+        
+        
       }
     });
   }
