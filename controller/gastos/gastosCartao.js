@@ -93,7 +93,7 @@ function buscarGastosUsuario(req, res) {
     }
     // Dados recebidos da requisição GET
     const decoded = jwt.verify(token, key);
-    const sql = 'SELECT * FROM compras_cartao WHERE id_user = ? AND compra_status = 1 AND MONTH(compra_data) = ? ORDER BY compra_data';
+    const sql = 'SELECT * FROM compras_cartao WHERE id_user = ? AND compra_status = 1 AND MONTH(compra_data) = ? ORDER BY compra_data DESC';
 
     connection.query(sql, [userID , mes], (err, result) => {
         if (err) {
