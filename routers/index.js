@@ -47,6 +47,7 @@ router.get('/produtos/delet', agro.deletProduto);
 router.get('/produtos/prvate', authController.privateFunction, authenticateToken);
 router.get('/gatos/cartao', cartao.FaturaCaro);
 router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken );
+router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticateToken );
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 

@@ -21,7 +21,7 @@ async function FaturaCaro(req, res) {
         compras.push({ nome, data, hora, valor, status });
     }
 
-    if (compras.length === 0) { 
+    if (compras.length === 0) {
         while ((match = regex2.exec(gastos))) {
             const [_, nome, data, hora, valor, status] = match;
             compras.push({ nome, data, hora, valor, status });
@@ -61,17 +61,7 @@ async function FaturaCaro(req, res) {
     }
 }
 
-function executeQuery(sql, values) {
-    return new Promise((resolve, reject) => {
-        connection.query(sql, values, (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-}
+
 
 
 
@@ -95,7 +85,7 @@ function buscarGastosUsuario(req, res) {
     const decoded = jwt.verify(token, key);
     const sql = 'SELECT * FROM compras_cartao WHERE id_user = ? AND compra_status = 1 AND MONTH(compra_data) = ? ORDER BY compra_data DESC';
 
-    connection.query(sql, [userID , mes], (err, result) => {
+    connection.query(sql, [userID, mes], (err, result) => {
         if (err) {
             console.error('Erro ao buscar os gastos no banco de dados:', err);
             return res.status(500).json({ message: 'Erro ao buscar os gastos.' });
@@ -107,4 +97,49 @@ function buscarGastosUsuario(req, res) {
         return res.status(200).json({ gastos, valorTotal });
     });
 }
-module.exports = { FaturaCaro, buscarGastosUsuario };
+
+
+
+function adicionargastosmanual(req, res) {
+    const { userID, compra } = req.query;
+    if (!userID) {
+        return res.status(501).json({ message: 'Nenhum id entregue.' });
+    }
+const {nome, status, valor }=compra
+    const dataAtual = new Date();
+    const dataFormatted = moment(dataAtual).format('YYYY-MM-DD');
+    const horaFormatted = moment(dataAtual).format('HH:mm:ss');
+    const valorFormatted = valor.replace(',', '.');
+
+
+    const token = req.headers.authorization;
+    if (!token) {
+        return res.status(401).json({ error: 'Token de acesso não fornecido.' });
+    }
+    // Dados recebidos da requisição GET
+    const decoded = jwt.verify(token, key);
+    if (decoded) {
+
+        const sql = 'INSERT INTO compras_cartao (compra_nome, compra_data, compra_hora, compra_valor, compra_status, id_user) VALUES (?, ?, ?, ?, ?, ?)';
+        const valuesInsert = [nome, dataFormatted, horaFormatted, valorFormatted, status, userID];
+        connection.query(sql, valuesInsert, (err, result) => {
+            if (err) {
+                console.error('Erro ao guardar dados', err);
+                return res.status(500).json({ message: 'Erro ao buscar os gastos.' });
+            }
+            return res.status(200).json({message: 'dados guardados com sucesso' });
+        });
+    }
+}
+function executeQuery(sql, values) {
+    return new Promise((resolve, reject) => {
+        connection.query(sql, values, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+module.exports = { FaturaCaro, buscarGastosUsuario , adicionargastosmanual};
