@@ -6,7 +6,7 @@ const listaridNoticia = async (req, res) => {
     const id = req.query.id;
     // Verificar se o ID do usuário foi fornecido
     if (!id) {
-      return res.status(400).json({ error: 'ID do usuário não fornecido' });
+      return res.status(400).json({ error: 'ID da noticias não fornecido' });
     }
 
     // Montar a query para buscar as notícias favoritas

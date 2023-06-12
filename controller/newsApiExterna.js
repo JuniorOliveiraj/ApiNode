@@ -1,6 +1,7 @@
 
 const axios = require('axios');
 const connection = require('../models/bd');
+const moment = require('moment');
 const apiKey =  '858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
 const buscarNoticias = async (req, res) => {
   try {
@@ -14,8 +15,9 @@ const buscarNoticias = async (req, res) => {
     const country = req.query.country;
     const sortBy = 'relevancy';
     const max = req.query.max;
-
-
+    const data = new Date(); // Aqui você substituirá pela sua data
+    const mes = moment(data).month() + 1; // +1 porque os meses em Moment.js são baseados em zero
+    console.log(mes)
     // URL da API GNews.io
     const url = `https://gnews.io/api/v4/search?q=${q}&lang=${lang}&country=${country}&max=${max}&apikey=${apiKey}`;
 
@@ -80,8 +82,8 @@ const buscarNoticias = async (req, res) => {
         }
       }
       if (!pesquisa) {
-        const sql = `SELECT * FROM news where q=? ORDER BY created_at DESC`;
-        const result = await executeQuery(sql, q);
+        const sql = `SELECT * FROM news where q=? AND  MONTH(created_at) = ?  ORDER BY created_at DESC`;
+        const result = await executeQuery(sql, [q, mes]);
 
         const noticias2 = result.map(noticia => ({
           id: noticia.id,
@@ -115,8 +117,9 @@ const buscarNoticias = async (req, res) => {
       // // if (response.data.errors[0] === errorMessage) {
       // //   return res.json({ message: 'Limite de requisições diárias excedido' });
       // // }
-      const sql = `SELECT * FROM news ORDER BY created_at DESC`;
-      const result = await executeQuery(sql, []);
+      const sql = `SELECT * FROM news where  MONTH(created_at) = ?  ORDER BY created_at DESC`;
+      const result = await executeQuery(sql, [ mes]);
+
 
       const noticias2 = result.map(noticia => ({
         id: noticia.id,
@@ -151,9 +154,12 @@ const buscarNoticias = async (req, res) => {
   } catch (error) {
     // Trata a exceção aqui...
     // Exibe a mensagem de erro ou registra o erro em um arquivo de log
+    const data = new Date(); // Aqui você substituirá pela sua data
+    const mes = moment(data).month() + 1; // +1 porque os meses em Moment.js são baseados em zero
+    console.log(mes)
     console.error('Erro:', error.message);
-    const sql = `SELECT * FROM news ORDER BY created_at DESC`;
-    const result = await executeQuery(sql, []);
+    const sql = `SELECT * FROM news where  MONTH(created_at) = ?  ORDER BY created_at DESC`;
+    const result = await executeQuery(sql, [ mes]);
 
     const noticias2 = result.map(noticia => ({
       id: noticia.id,
