@@ -45,6 +45,7 @@ function register(req, res) {
       return res.status(201).json({
         message: 'Usuário criado com sucesso.',
         token,
+        userId,
         user
       });
     });
