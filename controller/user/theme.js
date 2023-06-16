@@ -5,7 +5,7 @@ const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 
 const listaridNoticia = async (req, res) => {
   const { themastatus, authorization, id, } = req.headers;
-  if (!authorization || !id || !themastatus) {
+  if (!authorization || !id ) {
     console.log(themastatus);
     return res.status(401).json({ error: 'Nenhum valor fornecido.', authorization, id, themastatus });
   }
@@ -21,6 +21,9 @@ const listaridNoticia = async (req, res) => {
       await executeQuery(sqlInsert, insertValues);
       return res.status(200).json({ mensagem: 'Registro inserido com sucesso.',  themastatus:themastatus});
     } else {
+      if(!themastatus){
+        return res.status(200).json({ mensagem: 'vazio',themastatus:result[0].thema});
+      }
       const sqlUpdate = "UPDATE thema_dark  SET thema = ? WHERE (id_user = ?)"
       const insertValues = [themastatus, id];
       await executeQuery(sqlUpdate, insertValues);
@@ -31,6 +34,7 @@ const listaridNoticia = async (req, res) => {
   }
 
 }
+
 
 function executeQuery(sql, values) {
   return new Promise((resolve, reject) => {
