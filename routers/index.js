@@ -4,6 +4,7 @@ const noticias = require('../controller/newsApiExterna');
 const noticiasBuscar = require('../controller/noticiasBuscar');
 const agro = require('../controller/produtos');
 const cartao = require('../controller/gastos/gastosCartao');
+const thema = require('../controller/user/theme');
 const jwt = require('jsonwebtoken');
 
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
@@ -37,6 +38,7 @@ router.get('/register', authController.register);
 router.get('/login', authController.login);
 router.get('/users/list', authController.userList, authenticateToken);
 router.get('/users/update', authController.updateUser, authenticateToken);
+router.get('/set-theme', thema.listaridNoticia);
 router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
 router.get('/favoritos/adicionar', noticias.adicionarNoticias);
 router.get('/favoritos/listar', noticias.listarFavoritas);
