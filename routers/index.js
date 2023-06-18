@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const authController = require('../controller/authController');
+const editarUser = require('../controller/user/editarUser')
 const noticias = require('../controller/newsApiExterna');
 const noticiasBuscar = require('../controller/noticiasBuscar');
 const agro = require('../controller/produtos');
@@ -39,6 +40,7 @@ router.get('/login', authController.login);
 router.get('/users/list', authController.userList, authenticateToken);
 router.get('/users/update', authController.updateUser, authenticateToken);
 router.get('/users/userLoad', authController.loaduser, authenticateToken);
+router.get('/users/tornar-adm', editarUser.updateuseradm, authenticateToken);
 router.get('/set-theme', thema.listaridNoticia);
 router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
 router.get('/favoritos/adicionar', noticias.adicionarNoticias);

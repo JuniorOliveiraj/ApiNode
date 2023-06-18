@@ -29,7 +29,7 @@ function register(req, res) {
     }
 
     // Salve o usuário no banco de dados
-    const user = { name, email, password: hashedPassword, company: 'convidado', status: 1, role: 'FullStack' };
+    const user = { name, email, password: hashedPassword, company: '1', status: 1, role: 'convidado' };
     connection.query('INSERT INTO users SET ?', user, (err, result) => {
       if (err) {
         console.error('Erro ao inserir o usuário no banco de dados:', err);
