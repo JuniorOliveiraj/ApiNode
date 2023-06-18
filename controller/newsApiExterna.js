@@ -2,49 +2,109 @@
 const axios = require('axios');
 const connection = require('../models/bd');
 const moment = require('moment');
-const apiKey =  '858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
+const apiKey = '858b8bc2fbb7c677917c9b4e16c1d1cd' //'8fef4b47ef03be9ddfbf8ffd7c6793ca'; // //'858b8bc2fbb7c677917c9b4e16c1d1cd';//'c3d390da535fcbe6d328bb8cfcf6bfb5';  
+
+
+
+
 const buscarNoticias = async (req, res) => {
+  const data = new Date();
+  const mes = moment(data).month() + 1;
+  const semanas = 1;
+  let q = req.query.q;
+  const lang = req.query.lang;
+  const country = req.query.country;
+  const sortBy = 'relevancy';
+  const max = req.query.max;
   try {
-    // Chave de API para acessar a GNews.io
 
-
-    // Parâmetros da consulta de busca
-    let pesquisa = false;
-    let q = req.query.q;
-    const lang = req.query.lang;
-    const country = req.query.country;
-    const sortBy = 'relevancy';
-    const max = req.query.max;
-    const data = new Date(); // Aqui você substituirá pela sua data
-    const mes = moment(data).month() + 1; // +1 porque os meses em Moment.js são baseados em zero
-    console.log(mes)
-    // URL da API GNews.io
     const url = `https://gnews.io/api/v4/search?q=${q}&lang=${lang}&country=${country}&max=${max}&apikey=${apiKey}`;
 
-    // Faz a requisição GET à API usando o Axios
     const response = await axios.get(url);
+    if (q === 'esporte' || q === 'noticias' || q === 'Tecnologia') {
+      if (response.data.articles) {
+        const noticiasLimitadas = response.data.articles.slice(0, 100);
 
-    // Verifica se a resposta contém dados de notícias
+        const noticias = {
+          totalArticles: response.data.totalArticles,
+          articles: noticiasLimitadas,
+        };
+
+        const user_id = 0;
+
+        for (const noticia of noticiasLimitadas) {
+          const {
+            title,
+            description,
+            content,
+            url,
+            image,
+            publishedAt,
+            source: { name: source_name, url: source_url },
+          } = noticia;
+
+          const sqlCheck = 'SELECT COUNT(*) AS count FROM news WHERE user_id = ? AND title = ? AND source_name = ? AND q = ?';
+          const valuesCheck = [user_id, title, source_name, q];
+          const result = await executeQuery(sqlCheck, valuesCheck);
+
+          if (result[0].count === 0) {
+            const sql = `INSERT INTO news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, q) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            const values = [
+              user_id,
+              title,
+              description,
+              content,
+              url,
+              image,
+              publishedAt,
+              source_name,
+              source_url,
+              1,
+              q,
+            ];
+            await executeQuery(sql, values);
+            // console.log('Notícia adicionada ao banco de dados.');
+          } else {
+            //  console.log('Notícia já existe, ignorando inserção.');
+          }
+        }
+
+        const resultFromDB = await executeQuery(`SELECT * FROM news WHERE q=? AND MONTH(created_at) = ? AND created_at >= DATE_SUB(CURDATE(), INTERVAL ? WEEK) ORDER BY created_at DESC`, [q, mes, semanas]);
+
+        const noticiasFromDB = resultFromDB.map(noticia => ({
+          id: noticia.id,
+          status: noticia.status,
+          title: noticia.title,
+          content: noticia.content,
+          description: noticia.description,
+          image: noticia.image,
+          publishedAt: noticia.publishedAt,
+          url: noticia.url,
+          source: {
+            name: noticia.source_name,
+            url: noticia.source_url,
+          },
+        }));
+
+        const noticiasFinal = {
+          totalArticles: noticiasFromDB.length,
+          articles: noticiasFromDB,
+        };
+
+        return res.json(noticiasFinal);
+      }
+    }
+
     if (response.data.articles) {
-      // Limita o número de notícias a um máximo de 100
-      const maxNoticias = Math.min(response.data.articles.length, 100);
-      // Seleciona somente as primeiras 100 notícias
-      const noticiasLimitadas = response.data.articles.slice(0, maxNoticias);
+      const noticiasLimitadas = response.data.articles.slice(0, 100);
 
-      // Cria um novo objeto com as notícias limitadas
       const noticias = {
         totalArticles: response.data.totalArticles,
         articles: noticiasLimitadas,
       };
 
-      const user_id = 0; // substitua por como você obtém o user_id
+      const user_id = 0;
 
-      // Adiciona as notícias no banco de dados
-      if (q != 'esporte' && q != 'noticias' && q != 'technology') {
-        q = 'noticias'
-        pesquisa = true
-      }
-      console.log(q, pesquisa)
       for (const noticia of noticiasLimitadas) {
         const {
           title,
@@ -72,56 +132,25 @@ const buscarNoticias = async (req, res) => {
             publishedAt,
             source_name,
             source_url,
-            1, // Valor fixo de status
-            q,
+            1,
+            'noticias',
           ];
           await executeQuery(sql, values);
-          console.log('Notícia adicionada ao banco de dados.');
+          //      console.log('Notícia adicionada ao banco de dados.');
         } else {
-          console.log('Notícia já existe, ignorando inserção.');
+          //  console.log('Notícia já existe, ignorando inserção.');
         }
       }
-      if (!pesquisa) {
-        const sql = `SELECT * FROM news where q=? AND  MONTH(created_at) = ?  ORDER BY created_at DESC`;
-        const result = await executeQuery(sql, [q, mes]);
 
-        const noticias2 = result.map(noticia => ({
-          id: noticia.id,
-          status: noticia.status,
-          title: noticia.title,
-          content: noticia.content,
-          description: noticia.description,
-          image: noticia.image,
-          publishedAt: noticia.publishedAt,
-          url: noticia.url,
-          source: {
-            name: noticia.source_name,
-            url: noticia.source_url
-          }
-        }));
+      const noticiasFinal = {
+        totalArticles: noticiasLimitadas.length,
+        articles: noticiasLimitadas,
+      };
 
-        const noticias3 = {
-          totalArticles: noticias2.length,
-          articles: noticias2,
-        };
-        // Retornar as notícias favoritas em formato JSON
-        return res.json(noticias3);
-      } else {
-        return res.json(noticias);
-      }
+      return res.json(noticiasFinal);
     } else if (response.data.errors) {
-      // Verifica se a resposta contém uma mensagem de erro de limite excedido
-      // const errorMessage =
-      //   'You have reached your request limit for today, the next reset will be tomorrow at midnight UTC. If you need more requests, you can upgrade your subscription here: https://gnews.io/#pricing';
-
-      // // if (response.data.errors[0] === errorMessage) {
-      // //   return res.json({ message: 'Limite de requisições diárias excedido' });
-      // // }
-      const sql = `SELECT * FROM news where  MONTH(created_at) = ?  ORDER BY created_at DESC`;
-      const result = await executeQuery(sql, [ mes]);
-
-
-      const noticias2 = result.map(noticia => ({
+      const resultFromDB = await executeQuery(`SELECT * FROM news WHERE q=? AND MONTH(created_at) = ? AND created_at >= DATE_SUB(CURDATE(), INTERVAL ? WEEK) ORDER BY created_at DESC`, [q, mes, semanas]);
+      const noticiasFromDB = resultFromDB.map(noticia => ({
         id: noticia.id,
         status: noticia.status,
         title: noticia.title,
@@ -132,36 +161,29 @@ const buscarNoticias = async (req, res) => {
         url: noticia.url,
         source: {
           name: noticia.source_name,
-          url: noticia.source_url
-        }
+          url: noticia.source_url,
+        },
       }));
 
-      const noticias = {
-        totalArticles: noticias2.length,
-        articles: noticias2,
+      const noticiasFinal = {
+        totalArticles: noticiasFromDB.length,
+        articles: noticiasFromDB,
       };
-      // Retornar as notícias favoritas em formato JSON
-      return res.json(noticias);
 
-
-
-
-
+      return res.json(noticiasFinal);
     }
 
-    // Caso contrário, retorna uma resposta vazia
     return res.json({});
   } catch (error) {
     // Trata a exceção aqui...
     // Exibe a mensagem de erro ou registra o erro em um arquivo de log
-    const data = new Date(); // Aqui você substituirá pela sua data
-    const mes = moment(data).month() + 1; // +1 porque os meses em Moment.js são baseados em zero
-    console.log(mes)
+    const data = new Date();
+    const mes = moment(data).month() + 1;
     console.error('Erro:', error.message);
-    const sql = `SELECT * FROM news where  MONTH(created_at) = ?  ORDER BY created_at DESC`;
-    const result = await executeQuery(sql, [ mes]);
 
-    const noticias2 = result.map(noticia => ({
+    const resultFromDB = await executeQuery(`SELECT * FROM news WHERE q=? AND MONTH(created_at) = ? AND created_at >= DATE_SUB(CURDATE(), INTERVAL ? WEEK) ORDER BY created_at DESC`, [q, mes, semanas]);
+
+    const noticiasFromDB = resultFromDB.map(noticia => ({
       id: noticia.id,
       status: noticia.status,
       title: noticia.title,
@@ -172,21 +194,22 @@ const buscarNoticias = async (req, res) => {
       url: noticia.url,
       source: {
         name: noticia.source_name,
-        url: noticia.source_url
-      }
+        url: noticia.source_url,
+      },
     }));
 
-    const noticias = {
-      totalArticles: noticias2.length,
-      articles: noticias2,
+    const noticiasFinal = {
+      totalArticles: noticiasFromDB.length,
+      articles: noticiasFromDB,
     };
-    // Retornar as notícias favoritas em formato JSON
-    if (!noticias) {
+
+    if (!noticiasFromDB.length) {
       return res.status(500).json({ message: 'Erro ao buscar notícias' });
     }
-    return res.json(noticias);
+
+    return res.json(noticiasFinal);
   }
-}
+};
 
 const adicionarNoticias = async (req, res) => {
   try {
@@ -230,15 +253,19 @@ const adicionarNoticias = async (req, res) => {
       response.news_id
     ];
 
-    // Execute a query usando a conexão direta
-    connection.query(query, values, (err, result) => {
-      if (err) {
-        console.error('Erro ao inserir a notícia no banco de dados:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor.' });
-      }
+    const checkNews = 'select * from favorite_news where news_id = ?';
+    const resultChekd = await executeQuery(checkNews, news_id);
+    if (resultChekd.length < 1) {
+      // Execute a query usando a conexão direta
+      connection.query(query, values, (err, result) => {
+        if (err) {
+          console.error('Erro ao inserir a notícia no banco de dados:', err);
+          return res.status(500).json({ error: 'Erro interno do servidor.' });
+        }
 
-      return res.json({ message: 'Notícia adicionada com sucesso' });
-    });
+        return res.json({ message: 'Notícia adicionada com sucesso' });
+      });
+    }
   } catch (error) {
     console.error('Erro:', error.message);
     return res.status(500).json({ error: 'Erro ao adicionar notícia' });

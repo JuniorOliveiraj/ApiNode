@@ -38,6 +38,7 @@ router.get('/register', authController.register);
 router.get('/login', authController.login);
 router.get('/users/list', authController.userList, authenticateToken);
 router.get('/users/update', authController.updateUser, authenticateToken);
+router.get('/users/userLoad', authController.loaduser, authenticateToken);
 router.get('/set-theme', thema.listaridNoticia);
 router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
 router.get('/favoritos/adicionar', noticias.adicionarNoticias);

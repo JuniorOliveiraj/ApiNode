@@ -152,7 +152,7 @@ function updateUser(req, res) {
   const { email, name, role, company } = form;
   const values22 = [email, name, role, company, urlImg, userID];
   if (!email || !name || !role || !company) {
-    res.status(500).json({ message: 'form vazio',form:form});
+    res.status(500).json({ message: 'form vazio', form: form });
   }
   const decoded = jwt.verify(token, key);
   if (decoded) {
@@ -174,20 +174,49 @@ function updateUser(req, res) {
           } else {
             const row = result2[0];
             row.token = token; // Adiciona a propriedade token ao objeto
-        
+
             res.status(200).json({ message: 'Usuário atualizado com sucesso!', user: row });
           }
         });
-        
-        
+
+
       }
     });
   }
+}
+
+const loaduser = async (req, res) => {
+  const { authorization ,id } = req.headers;
+  if ( !authorization || !id){
+    return res.status(500).json({ error: 'token não fornecido'});
+  }
+
+  try {
+    const decoded = jwt.verify(authorization, key);
+    if (decoded) {
+      connection.query('select * from users where id = ?', [id],(err, results) => {
+        if (err) {
+          console.error('Erro ao consultar o banco de dados:', err);
+          return res.status(500).json({ error: 'Erro interno do servidor.' });
+        }
+        if (results.length > 0) {
+          return res.status(200).json({ user:results, token:authorization });
+        } else {
+          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado' , });
+        }
+      });
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(401).json({ error: 'usuario não autorizado' });
+  }
+
 }
 module.exports = {
   register,
   login,
   privateFunction,
   userList,
-  updateUser
+  updateUser,
+  loaduser
 };

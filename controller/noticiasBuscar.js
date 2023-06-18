@@ -1,6 +1,6 @@
 const connection = require('../models/bd');
-
-
+const jwt = require('jsonwebtoken');
+const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 const listaridNoticia = async (req, res) => {
   try {
     const id = req.query.id;
@@ -48,48 +48,56 @@ const listaridNoticia = async (req, res) => {
 
 const AdicionarNoticia = async (req, res) => {
   const { noticia, urlImagen, id, name } = req.query;
-  try{
-  const data = new Date(); // Aqui você substituirá pela sua data
-  const response = {
-    user_id: id,
-    title: noticia.title,
-    description: noticia.description,
-    content: noticia.content,
-    url: noticia.url,
-    image: urlImagen,
-    publishedAt: data,
-    source_name: name,
-    source_url: noticia.url,
-    status: 1,
-  };
-  const query = `INSERT INTO news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, q)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const values = [
-    response.user_id,
-    response.title,
-    response.description,
-    response.content,
-    response.url,
-    response.image,
-    response.publishedAt,
-    response.source_name,
-    response.source_url,
-    response.status,
-    'noticias'
-  ];
+  const token = req.headers.authorization;
+  try {
+    if (!token) {
+      return res.status(401).json({ error: 'Nenhum valor fornecido.', });
+    }
+    const decoded = jwt.verify(token, key);
+    const checkUser = 'select * from users where id = ?';
+    const result = await executeQuery(checkUser, id);
+    if (result[0].role === 'ADM') {
 
+      const data = new Date(); 
+      const response = {
+        user_id: id,
+        title: noticia.title,
+        description: noticia.description,
+        content: noticia.content,
+        url: noticia.url,
+        image: urlImagen,
+        publishedAt: data,
+        source_name: name,
+        source_url: noticia.url,
+        status: 1,
+      };
+      const query = `INSERT INTO news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, q)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const values = [
+        response.user_id,
+        response.title,
+        response.description,
+        response.content,
+        response.url,
+        response.image,
+        response.publishedAt,
+        response.source_name,
+        response.source_url,
+        response.status,
+        'noticias'
+      ];
+      // Execute a query usando a conexão direta
+      connection.query(query, values, (err, result) => {
+        if (err) {
+          console.error('Erro ao inserir a notícia no banco de dados:', err);
+          return res.status(500).json({ error: 'Erro interno do servidor.' });
+        }
 
-  
-    
-    // Execute a query usando a conexão direta
-    connection.query(query, values, (err, result) => {
-      if (err) {
-        console.error('Erro ao inserir a notícia no banco de dados:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor.' });
-      }
-
-      return res.json({ message: 'Notícia adicionada com sucesso' });
-    });
+        return res.json({ message: 'Notícia adicionada com sucesso' });
+      });
+    } else {
+      return res.status(500).json({ error: 'somnete ADM pode adicionar noticias' });
+    }
   } catch (error) {
     console.error('Erro:', error.message);
     return res.status(500).json({ error: 'Erro ao adicionar notícia' });
