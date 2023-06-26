@@ -84,6 +84,7 @@ const buscarNoticias = async (req, res) => {
             name: noticia.source_name,
             url: noticia.source_url,
           },
+          type: noticia.type
         }));
 
         const noticiasFinal = {
@@ -163,6 +164,7 @@ const buscarNoticias = async (req, res) => {
           name: noticia.source_name,
           url: noticia.source_url,
         },
+        type: noticia.type
       }));
 
       const noticiasFinal = {
@@ -196,6 +198,7 @@ const buscarNoticias = async (req, res) => {
         name: noticia.source_name,
         url: noticia.source_url,
       },
+      type: noticia.type
     }));
 
     const noticiasFinal = {
@@ -305,7 +308,8 @@ const listarFavoritas = (req, res) => {
         source: {
           name: noticia.source_name,
           url: noticia.source_url
-        }
+        },
+        type: noticia.type
       }));
 
       // Retornar as notícias favoritas em formato JSON
