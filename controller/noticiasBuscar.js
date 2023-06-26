@@ -10,7 +10,7 @@ const listaridNoticia = async (req, res) => {
     }
 
     // Montar a query para buscar as notícias favoritas
-    const query = `SELECT * FROM news WHERE title = ? ORDER BY created_at ASC`;
+    const query = `SELECT * FROM news WHERE title LIKE CONCAT('%', ?, '%') ORDER BY created_at ASC`;
     const values = [id];
     const update = `UPDATE news SET lida = 1 WHERE title = ?`
     const result = await executeQuery(update, values);
