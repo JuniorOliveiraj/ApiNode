@@ -34,7 +34,8 @@ const listaridNoticia = async (req, res) => {
         source: {
           name: noticia.source_name,
           url: noticia.source_url
-        }
+        },
+        type: noticia.type
       }));
 
       // Retornar as notícias favoritas em formato JSON
