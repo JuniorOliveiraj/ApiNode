@@ -71,8 +71,8 @@ const AdicionarNoticia = async (req, res) => {
         source_url: noticia.url,
         status: 1,
       };
-      const query = `INSERT INTO news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, q)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO news (user_id, title, description, content, url, image, publishedAt, source_name, source_url, status, q, type)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const values = [
         response.user_id,
         response.title,
@@ -84,7 +84,8 @@ const AdicionarNoticia = async (req, res) => {
         response.source_name,
         response.source_url,
         response.status,
-        'noticias'
+        'noticias',
+        1
       ];
       // Execute a query usando a conexão direta
       connection.query(query, values, (err, result) => {
