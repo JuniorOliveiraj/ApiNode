@@ -12,7 +12,7 @@ function createDirectoryIfNotExists(directoryPath) {
 
 // Função para obter a URL da imagem
 function getImageUrl(directoryPath, filename) {
-  return `http://localhost:3001${directoryPath}/${filename}`;
+  return `https://api-node-psi.vercel.app${directoryPath}/${filename}`;
 }
 
 // Função para salvar a imagem no caminho especificado
