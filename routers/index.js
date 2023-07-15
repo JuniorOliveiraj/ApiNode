@@ -7,10 +7,13 @@ const agro = require('../controller/produtos');
 const cartao = require('../controller/gastos/gastosCartao');
 const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
-const storage = require('../uploadImage')
+const storage = require('../uploadImage');
 const jwt = require('jsonwebtoken');
 
+const multer = require('multer');
+const upload = multer();
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
+
 
 // Middleware para liberar os headers
 const allowHeadersMiddleware = (req, res, next) => {
@@ -58,7 +61,7 @@ router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticate
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
-router.post('/storage/upload', storage.uploadImagem);
+router.post('/storage/upload',upload.any() , storage.uploadImagem);
 
 
 

@@ -1,75 +1,78 @@
-const multer = require('multer');
-const path = require('path');
+const { google } = require('googleapis');
 const fs = require('fs');
+const stream = require('stream');
+const GOOGLE_API_FOLDER_ID = '1Mn-a8zRrVjgIoK0j5jngr0hMBI61MTG9';
 
-// Função para criar a pasta caso não exista
-function createDirectoryIfNotExists(directoryPath) {
-  const fullPath = path.join(__dirname, 'public', directoryPath);
-  if (!fs.existsSync(fullPath)) {
-    fs.mkdirSync(fullPath, { recursive: true });
-  }
-}
+// Carrega as credenciais de autenticação do arquivo 'GOOGLE.json'
+const credentials = require('./google-key.json');
 
-// Função para obter a URL da imagem
-function getImageUrl(directoryPath, filename) {
-  return `https://api-node-psi.vercel.app${directoryPath}/${filename}`;
-}
+// Cria um cliente OAuth2 com as credenciais
+const auth = new google.auth.GoogleAuth({
+  credentials,
+  scopes: ['https://www.googleapis.com/auth/drive'],
+});
 
-// Função para salvar a imagem no caminho especificado
-function saveImage(directoryPath, req, res) {
-  return new Promise((resolve, reject) => {
-    createDirectoryIfNotExists(directoryPath);
+// Cria o cliente do Google Drive
+const driveClient = google.drive({ version: 'v3', auth });
 
-    const storage = multer.diskStorage({
-      destination: path.join(__dirname, 'public', directoryPath),
-      filename: (req, file, cb) => {
-        const filename = file.originalname;
-        const filepath = path.join(directoryPath, filename);
-
-        // Verifica se o arquivo já existe
-        if (fs.existsSync(filepath)) {
-          // Arquivo já existe, rejeita a promessa
-          reject(new Error('O arquivo já existe.'));
-        } else {
-          // Arquivo não existe, continua com o processo de salvamento
-          cb(null, filename);
-        }
-      }
-    });
-
-    const upload = multer({ storage }).single('image');
-
-    upload(req, res, (error) => {
-      if (error instanceof multer.MulterError) {
-        // Erro do multer (por exemplo, arquivo muito grande, formato inválido, etc.)
-        reject(error);
-      } else if (error) {
-        // Outro erro ocorreu durante o upload
-        reject(error);
-      } else {
-        // Upload bem-sucedido
-        if (req.file) {
-          const filename = req.file.filename;
-          const imageUrl = getImageUrl(directoryPath, filename);
-          resolve(imageUrl);
-        } else {
-          // Nenhum arquivo foi enviado
-          reject(new Error('Nenhum arquivo foi enviado.'));
-        }
-      }
-    });
+const checkIfFileExists = async (fileName) => {
+  const response = await driveClient.files.list({
+    q: `name='${fileName}' and parents='${GOOGLE_API_FOLDER_ID}'`,
+    fields: 'files(id)',
   });
-}
+  const files = response.data.files;
+  if (files && files.length > 0) {
+    return files[0].id;
+  }
+  return null;
+};
+
+const uploadFile = async (fileObject) => {
+  const fileId = await checkIfFileExists(fileObject.originalname);
+  if (fileId) {
+    console.log(`File ${fileObject.originalname} already exists with ID ${fileId}`);
+    return fileId;
+  }
+
+  const bufferStream = new stream.PassThrough();
+  bufferStream.end(fileObject.buffer);
+  const { data } = await driveClient.files.create({
+    media: {
+      mimeType: fileObject.mimeType,
+      body: bufferStream,
+    },
+    requestBody: {
+      name: fileObject.originalname,
+      parents: [GOOGLE_API_FOLDER_ID],
+    },
+    fields: 'id,name',
+  });
+  console.log(`Uploaded file ${data.name} ${data.id}`);
+  return data.id;
+};
 
 async function uploadImagem(req, res) {
   try {
-    const { file, teste } = req.query;
-    const imageUrl = await saveImage('/imagem', req, res);
-    res.json({ url: imageUrl });
+    const { body, files } = req;
+
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: 'Nenhum arquivo foi enviado.' });
+    }
+    
+    const fileUrls = [];
+    
+    for (let f = 0; f < files.length; f += 1) {
+      const fileId = await uploadFile(files[f]);
+      const url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      fileUrls.push(url);
+    }
+
+    res.status(200).json({ urls: fileUrls });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Ocorreu um erro ao salvar a imagem' });
+    res.status(500).json({ error: 'Ocorreu um erro ao fazer o upload do arquivo.' });
   }
 }
 
-module.exports = { uploadImagem, saveImage };
+module.exports = { uploadImagem };
+
