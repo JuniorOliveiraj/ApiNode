@@ -7,7 +7,7 @@ const GOOGLE_API_FOLDER_ID = '1PWdPwKCkp7FEY1XVRz0idtuBJOrHtpQK';
 require('dotenv').config();
 
 const credentials ={
-  "type": process.env.TYPE,
+  "type": process.env.DRIVE_TYPE,
   "project_id": process.env.PROJECT_ID,
   "private_key_id": process.env.PRIVATE_KEY_ID,
   "private_key": process.env.PRIVATE_KEY,
