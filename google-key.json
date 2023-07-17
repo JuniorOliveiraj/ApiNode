@@ -1,13 +1,3 @@
 {
-  "type": "service_account",
-  "project_id": "xenon-pager-349513",
-  "private_key_id": "b7dc55fa972f57d0d5b90acb145c00cc9b3218e2",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCmKImTZ4gA22aZ\n5ga7b5zUgTqN01ypRLb6qUXu+nHbHYRf9GF2eQlpT71hNL5VAuQQc2IRqc+/uZwN\nsef+NFVl02XIgcULPbhfF5nSJSuN2WqaIyr0SxUcI9Zs+kZMJxhs0WTVfNX3aKwi\nuIzptV5I1IjY28w8MeD683qdKt95KOh+R8qCnnJvhHsVJdTIBcj6ob/eySEenpgM\nwloz+900r/GeDhjfSRqDlksyKNJrGn0sjIHGUXs7vu/jusvgMwcKBjxAAd1ZN4m/\nSBFoQYBXm4ETbLGK7evACUrtxWhyRnJWsb1J57pqWjeucjl1pAubwKCVwFANOMUN\nxi0SQL1zAgMBAAECggEAJK8MeKvB3haSV2XulJE2ub/yMn+4lHJkR4D5vKI0YuDo\nadrlbaeZSVPehsiDQPeLbIpc23N3N2f+KRPfGUNqmzmJ3jOwUiQFQZFPV5L3Q7D9\nlRwwjpDJD1ZmL9ctkACNpvCv52ZRQvcsEdpW2f4926x4rhAQzjVg62a36l0dy3y+\nhBbWxFSqJBHT5Heja0YkmIqMSlko3BEyzjWohafEE/4ZJCeFGhC6/Jwr0tZRD4tT\nvtGOAwCLfRbDMkVTMlmhspmObSaYbgyeqb8oy/2y2hj6c9Jhp5LEL5GxKk2hXdOq\n5WgoTNYE1ihjAgxVvrmef1DZML2CykMFXneFvqOyOQKBgQDUXMDsMTGSr+79HZmF\nO0Ng5jv7PbeBLKCq3r31Xv47RHK1sJRCRLxQwv50qlh38u42Ll6Thc59kiP/pItK\ntHGeZw15VASXUX6BJjCSKkAc+/uKKktomeHgTN5eFjDzdZb4JRoudFoCBVQvbWW2\njBu9oKai990ePm4Zo70676fORQKBgQDITT1tZfoXWC/GkuaisNfaT68pX/xsxero\npKP4xno2tJfNXBAr0g5Mx9guBbJ0O57jLyFxQkDhkpCDIi1xpGg3rQ1fkCmMgfZ8\niKPzv3lZdBRf7BHrQgnEP0/IzTKe27kJVCnHL78yGgTcj/ilUvVlTSfRUh0YKC4X\n1AkeeI9UVwKBgCJUBBOqOBtAOV/NQx3YYKHvVc7dQSauciJs80QQ4QPvoqNgMfcs\naUyc2Mk/KCHrsTos8LjkLmb6Erume6XN2XgDrJfqTvuu/sYdyEg4cDi/OwAwqhP0\nnCDIDEIlUDBq18axKLRNtqcQ+XTZOFH0AB/9MjKx4pqa+O1IHLTEPNoJAoGAJoJz\nJO1OP968kLj9jpnhZh+b1aCWr3L9zuyYeePu60WdSeZBVat1BF4HuhFuVdqAmb0d\n+OB8COJc1llj002Am/OxdoYI9vKlqRu8KcjOU9x1blu8tjZkGk7xz/FjohcsZBbC\nUYFkiQVnmeA0NdTVSTykQyI+Zb6T3hDuD+Wt6NECgYAx/5NzNP0ZBhffIf6NkG6O\nM559OutLC+JiB3PpOkYGNUrJDDd4NiaKp/Bw6Px+LTJEmFKxCNr3Nhp9tMHisIbs\nN8fIJfw4b3uY+E38Izqg8U2o/hCOTWoCTV5cT6o++HNV0JRGmPua85x/dmmbEPik\nHLnj4YOKBGfUQ2Io8iA7nQ==\n-----END PRIVATE KEY-----\n",
-  "client_email": "upload-drive@xenon-pager-349513.iam.gserviceaccount.com",
-  "client_id": "101673556350803570526",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/upload-drive%40xenon-pager-349513.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+
 }
