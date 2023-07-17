@@ -19,6 +19,7 @@ const credentials ={
   "client_x509_cert_url": process.env.CLIENT_X509_CERT_URL,
   "universe_domain": process.env.UNIVERSE_DOMAIN
 };
+console.log(credentials)
 
 
 // Cria um cliente OAuth2 com as credenciais
