@@ -22,7 +22,7 @@ const credentials = {
 };
 
 
-
+console.log(credentials)
 
 // Cria um cliente OAuth2 com as credenciais
 const auth = new google.auth.GoogleAuth({
