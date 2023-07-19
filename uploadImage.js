@@ -93,4 +93,3 @@ async function uploadImagem(req, res) {
 }
 
 module.exports = { uploadImagem };
-
