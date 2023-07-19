@@ -21,9 +21,6 @@ const credentials = {
   "universe_domain": process.env.UNIVERSE_DOMAIN
 };
 
-
-console.log(credentials)
-
 // Cria um cliente OAuth2 com as credenciais
 const auth = new google.auth.GoogleAuth({
   credentials,
