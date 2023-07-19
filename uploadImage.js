@@ -4,7 +4,25 @@ const stream = require('stream');
 const GOOGLE_API_FOLDER_ID = '1Mn-a8zRrVjgIoK0j5jngr0hMBI61MTG9';
 
 // Carrega as credenciais de autenticação do arquivo 'GOOGLE.json'
-const credentials = require('./google-key.json');
+//const credentials2 = require('./google-key.json');
+require('dotenv').config();
+
+const credentials = {
+  "type": process.env.DRIVE_TYPE,
+  "project_id": process.env.PROJECT_ID,
+  "private_key_id": process.env.PRIVATE_KEY_ID,
+  "private_key": process.env.PRIVATE_KEY,
+  "client_email": process.env.CLIENT_EMAIL,
+  "client_id": process.env.CLIENT_ID,
+  "auth_uri": process.env.AUTH_URI,
+  "token_uri": process.env.TOKEN_URI,
+  "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER_X509_CERT_URL,
+  "client_x509_cert_url": process.env.CLIENT_X509_CERT_URL,
+  "universe_domain": process.env.UNIVERSE_DOMAIN
+};
+
+
+
 
 // Cria um cliente OAuth2 com as credenciais
 const auth = new google.auth.GoogleAuth({
