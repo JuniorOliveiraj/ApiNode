@@ -74,11 +74,12 @@ async function ListBlog(req, res) {
     const blogQuery = 'SELECT blogs.id,blogs.cover_link,blogs.title, users.name, users.avatarUrl FROM blogs INNER JOIN users ON blogs.user_id = users.id;';
     const blogValues = [];
     const blogResult = await executeQuery(blogQuery, blogValues);
+    const data = new Date();
     const formattedBlogs = blogResult.map(blog => ({
       id: blog.id,
       cover: blog.cover_link,
       title: blog.title,
-      createdAt: '10/10//2023',  
+      createdAt: data,  
       view: 2,
       comment: 0,
       share: 2,
