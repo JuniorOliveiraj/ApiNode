@@ -67,6 +67,37 @@ async function addBlog(req, res) {
     return res.status(500).json({ error: error, message: 'Erro interno do servidor.' });
   }
 }
+
+
+async function ListBlog(req, res) {
+  try {
+    const blogQuery = 'SELECT blogs.id,blogs.cover_link,blogs.title, users.name, users.avatarUrl FROM blogs INNER JOIN users ON blogs.user_id = users.id;';
+    const blogValues = [];
+    const blogResult = await executeQuery(blogQuery, blogValues);
+    const formattedBlogs = blogResult.map(blog => ({
+      id: blog.id,
+      cover: blog.cover_link,
+      title: blog.title,
+      createdAt: '10/10//2023',  
+      view: 2,
+      comment: 0,
+      share: 2,
+      favorite: 1,
+      author: {
+        name: blog.name,
+        avatarUrl: blog.avatarUrl,
+      },
+    }));
+
+    return res.status(200).json({ message: 'TODOS OS BLOGS', BLOG: formattedBlogs });
+  } catch (error) {
+    console.error('Erro ao buscar os blogs:', error);
+    return res.status(500).json({ error: 'Erro interno do servidor.' });
+  }
+}
+
+
+
 function executeQuery(sql, values) {
   return new Promise((resolve, reject) => {
     connection.query(sql, values, (err, result) => {
@@ -79,5 +110,5 @@ function executeQuery(sql, values) {
   });
 }
 
-module.exports = { addBlog };
+module.exports = { addBlog, ListBlog };
 
