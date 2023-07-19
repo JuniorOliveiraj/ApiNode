@@ -61,6 +61,7 @@ router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticate
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
+router.get('/blog/list', blog.ListBlog);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
 
 
