@@ -62,6 +62,7 @@ router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
 router.get('/blog/list', blog.ListBlog);
+router.get('/blog/read', blog.readBlog);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
 
 
