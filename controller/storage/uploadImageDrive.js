@@ -1,5 +1,7 @@
 
-// codigo novo const { google } = require('googleapis');
+// codigo novo 
+
+const { google } = require('googleapis');
 const fs = require('fs');
 const stream = require('stream');
 const GOOGLE_API_FOLDER_ID = '1PWdPwKCkp7FEY1XVRz0idtuBJOrHtpQK';
