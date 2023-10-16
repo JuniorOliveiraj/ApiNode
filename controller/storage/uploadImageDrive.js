@@ -1,3 +1,6 @@
+
+// codigo novo 
+
 const { google } = require('googleapis');
 const fs = require('fs');
 const stream = require('stream');
@@ -19,8 +22,7 @@ const credentials ={
   "client_x509_cert_url": process.env.CLIENT_X509_CERT_URL,
   "universe_domain": process.env.UNIVERSE_DOMAIN
 };
-console.log(credentials)
-
+console.log(credentials);
 
 // Cria um cliente OAuth2 com as credenciais
 const auth = new google.auth.GoogleAuth({
@@ -47,9 +49,23 @@ const uploadFile = async (fileObject) => {
   const fileId = await checkIfFileExists(fileObject.originalname);
   if (fileId) {
     console.log(`File ${fileObject.originalname} already exists with ID ${fileId}`);
+    
+    // Substitua o arquivo existente
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(fileObject.buffer);
+    await driveClient.files.update({
+      fileId: fileId,
+      media: {
+        mimeType: fileObject.mimeType,
+        body: bufferStream,
+      },
+    });
+    
+    console.log(`Updated file ${fileObject.originalname} ${fileId}`);
     return fileId;
   }
 
+  // Cria um novo arquivo se não existir
   const bufferStream = new stream.PassThrough();
   bufferStream.end(fileObject.buffer);
   const { data } = await driveClient.files.create({
@@ -67,7 +83,4 @@ const uploadFile = async (fileObject) => {
   return data.id;
 };
 
-
-
 module.exports = { uploadFile };
-

@@ -159,7 +159,7 @@ async function readBlog(req, res) {
       "name": "Alice Brown",
       "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkb5MwXJPW1fkMe_RR8NDge491YmPLwJfe0J_73wkyuYpZwN-XQy7Jt73isBqWzO_ed7o&usqp=CAU",
       "postedAt": "2023-07-02T10:00:00Z",
-      "message": "Second comment",
+      "message": "COMENTARIO DE TESTE.....",
       "replyComment": [],
       "users": []
     }
