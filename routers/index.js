@@ -9,6 +9,7 @@ const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
 const storage = require('../uploadImage');
 const jwt = require('jsonwebtoken');
+const mirante = require('../controller/MIRANTE/produtos');
 
 const multer = require('multer');
 const upload = multer();
@@ -64,6 +65,7 @@ router.get('/blog/adicionar', blog.addBlog);
 router.get('/blog/list', blog.ListBlog);
 router.get('/blog/read', blog.readBlog);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
+router.get('/list/mirante', mirante.produtosMirante);
 
 
 
