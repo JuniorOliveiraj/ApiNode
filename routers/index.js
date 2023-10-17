@@ -66,7 +66,8 @@ router.get('/blog/list', blog.ListBlog);
 router.get('/blog/read', blog.readBlog);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
 router.get('/mirante/list', mirante.produtosMirante);
-router.get('/mirante/addimg', mirante.AddprodutosMirante);
+router.get('/mirante/list/bancoMirante', mirante.RequestMirante);
+
 
 
 

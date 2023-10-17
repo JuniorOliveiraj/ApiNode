@@ -1,5 +1,5 @@
 const connection = require("../../models/bd")
-
+const axios = require('axios');
 function produtosMirante(req, res) {
     const sql = `
     SELECT 
@@ -48,6 +48,7 @@ function produtosMirante(req, res) {
 
 }
 
+
 async function AddprodutosMirante(req, res) {
     const { id_produto, urls } = req.headers;
 
@@ -78,6 +79,31 @@ async function AddprodutosMirante(req, res) {
 }
 
 
+
+
+
+function RequestMirante(req, res) {
+    const url = 'https://lojamirante.com.br/feed/imagensProdutos';
+
+    axios.get(url)
+        .then(response => {
+            console.log('Status: ', response.status);
+            // Retornar status 200 em caso de sucesso
+            if (response.status === 200) {
+                console.log('Requisição bem-sucedida!');
+                return res.status(200).json({ mensagem: 'Requisição bem-sucedida!.', PRODUTOS:response.data });
+            } else {
+                console.log('Falha na requisição.');
+                return res.status(500).json({ mensagem: 'Falha na requisição.' });
+            }
+        })
+        .catch(error => {
+            // Retornar status de falha em caso de erro
+            console.error('Erro na requisição:', error.message);
+        });
+
+}
+
 function executeQuery(sql, values) {
     return new Promise((resolve, reject) => {
         connection.query(sql, values, (err, result) => {
@@ -91,4 +117,4 @@ function executeQuery(sql, values) {
 }
 
 
-module.exports = { produtosMirante, AddprodutosMirante }
+module.exports = { produtosMirante, AddprodutosMirante, RequestMirante }
