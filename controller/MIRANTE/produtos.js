@@ -104,6 +104,28 @@ function RequestMirante(req, res) {
 
 }
 
+
+
+async function RequestDownload(req, res) {
+    const { url } = req.query;
+
+    if (!url) {
+      return res.status(400).json({ error: 'A URL deve ser fornecida.' });
+    }
+  
+    try {
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+  
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename=${url.replace(/^.*[\\\/]/, '')}`);
+      res.send(response.data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Falha ao realizar o download do arquivo.' });
+    }
+}
+
+
 function executeQuery(sql, values) {
     return new Promise((resolve, reject) => {
         connection.query(sql, values, (err, result) => {
@@ -117,4 +139,4 @@ function executeQuery(sql, values) {
 }
 
 
-module.exports = { produtosMirante, AddprodutosMirante, RequestMirante }
+module.exports = { produtosMirante, AddprodutosMirante, RequestMirante , RequestDownload}
