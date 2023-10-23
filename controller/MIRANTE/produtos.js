@@ -106,6 +106,37 @@ function RequestMirante(req, res) {
 
 
 
+function ProdutosGaleria(req, res) {
+    const { foder } = req.query;
+    const url = `https://www.lojamirante.com.br/adm/produtos/getImagesByFolder/${foder ? foder : 0}`;
+    const cookie ='_gcl_au=1.1.841080069.1690978702; _fbp=fb.2.1690978701657.620299206; _ga_KC8Y9TJF7K=deleted; cartstack.com-cartid=NDgzMTY5NTI4; cartstack.com-bwrid=NjU2MDMzOTQ=; xe_visitor=eyJpZCI6IjBkNWE1ODBjLThiMjItNDZiMi04YTdlLWRmYjMyOTI4ODI2YyIsImVtYWlsIjoibWlkaWFsb2phbWlyYW50ZUBnbWFpbC5jb20iLCJjcGgiOiI0Nzk5MjkxMjIyMiJ9; dinLeadTrack=eyJyZWZlcnJlciI6Imxpbmt0ci5lZSIsInJlZmVycmVyX3Bvc3RlZCI6dHJ1ZSwidXNlcl9pbmZvX3R5cGUiOiJQQyIsInVzZXJfaW5mbyI6IlBRbUdPLkEuYzU5MCJ9; _gcl_aw=GCL.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gac_UA-98717817-1=1.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gid=GA1.3.2143227991.1698059131; _clck=111r7iv|2|fg3|0|1322; xe_config=Mk43VTYyQjA5MCw0MjMzNzBFNC1EOUY2LTZGMTMtNEJCRS00OEY1NkZFQTJGQzksbG9qYW1pcmFudGUuY29tLmJy; dinTrafficSource=eyJ1cmwiOiJodHRwczovL3d3dy5sb2phbWlyYW50ZS5jb20uYnIvIiwicmVmZXJlciI6IiJ9; ci_session=hs2jl2uiavmn1ufth2g6n4i94svur7hh; _ga=GA1.3.1799049818.1690978702; _gat_UA-98717817-1=1; _clsk=19oj924|1698074816727|2|1|u.clarity.ms/collect; _ga_KC8Y9TJF7K=GS1.1.1698070646.99.1.1698074823.52.0.0'
+    axios.get(`${url}`, {
+        headers: {
+            Cookie: cookie
+        }
+    })
+        .then(response => {
+            console.log('Status: ', response.status);
+            // Retornar status 200 em caso de sucesso
+            if (response.status === 200) {
+                console.log('Requisição bem-sucedida!');
+                return res.status(200).json({ mensagem: 'Requisição bem-sucedida!.', PRODUTOS: response.data });
+            } else {
+                console.log('Falha na requisição.');
+                return res.status(500).json({ mensagem: 'Falha na requisição.' });
+            }
+        })
+        .catch(error => {
+            // Retornar status de falha em caso de erro
+            console.error('Erro na requisição:', error.message);
+        });
+
+}
+
+
+
+
+
 async function RequestDownload(req, res) {
     const { url } = req.query;
 
@@ -139,4 +170,7 @@ function executeQuery(sql, values) {
 }
 
 
-module.exports = { produtosMirante, AddprodutosMirante, RequestMirante , RequestDownload}
+
+
+
+module.exports = { produtosMirante, AddprodutosMirante, RequestMirante , RequestDownload, ProdutosGaleria}
