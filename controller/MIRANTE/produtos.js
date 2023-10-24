@@ -109,7 +109,7 @@ function RequestMirante(req, res) {
 function ProdutosGaleria(req, res) {
     const { foder } = req.query;
     const url = `https://www.lojamirante.com.br/adm/produtos/getImagesByFolder/${foder ? foder : 0}`;
-    const cookie ='_hjSessionUser_2995331=eyJpZCI6IjIwOTY0MDRmLWNmODAtNTkyMS05NjI4LTlmZjA1OGU4YzE0NyIsImNyZWF0ZWQiOjE2NjkzMTA2OTc5NzAsImV4aXN0aW5nIjp0cnVlfQ==; xe_visitor=eyJpZCI6IjdhMjY5MDQ5LTkzMzYtNDE3ZS05MWQ4LTIzYTExZmU5NDNmYSIsImVtYWlsIjoiIn0=; ci_session=db7d9kt3rafe8666p3vnoto3jf4qr425'
+    const cookie ='_gcl_au=1.1.841080069.1690978702; _fbp=fb.2.1690978701657.620299206; _ga_KC8Y9TJF7K=deleted; cartstack.com-cartid=NDgzMTY5NTI4; cartstack.com-bwrid=NjU2MDMzOTQ=; xe_visitor=eyJpZCI6IjBkNWE1ODBjLThiMjItNDZiMi04YTdlLWRmYjMyOTI4ODI2YyIsImVtYWlsIjoibWlkaWFsb2phbWlyYW50ZUBnbWFpbC5jb20iLCJjcGgiOiI0Nzk5MjkxMjIyMiJ9; dinLeadTrack=eyJyZWZlcnJlciI6Imxpbmt0ci5lZSIsInJlZmVycmVyX3Bvc3RlZCI6dHJ1ZSwidXNlcl9pbmZvX3R5cGUiOiJQQyIsInVzZXJfaW5mbyI6IlBRbUdPLkEuYzU5MCJ9; _gcl_aw=GCL.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gac_UA-98717817-1=1.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gid=GA1.3.2143227991.1698059131; dinTrafficSource=eyJ1cmwiOiJodHRwczovL3d3dy5sb2phbWlyYW50ZS5jb20uYnIvIiwicmVmZXJlciI6IiJ9; _clck=111r7iv|2|fg4|0|1322; xe_config=Mk43VTYyQjA5MCw0MjMzNzBFNC1EOUY2LTZGMTMtNEJCRS00OEY1NkZFQTJGQzksbG9qYW1pcmFudGUuY29tLmJy; _ga=GA1.3.1799049818.1690978702; _clsk=c4n4nr|1698147809479|8|1|u.clarity.ms/collect; ci_session=b3vonmm8qic6dnocn6hrbmj0ebfm5uhb; _ga_KC8Y9TJF7K=GS1.1.1698146198.102.1.1698147812.60.0.0'
     axios.get(`${url}`, {
         headers: {
             Cookie: cookie
