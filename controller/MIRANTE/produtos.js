@@ -163,12 +163,12 @@ async function testeCupom(req, res) {
         const arrayCupom = [
             {
                 "Código": "Cupomp5",
-                "quantidade": 150,
+                "quantidade": 200,
                 data: '10/10/0000',
             },
             {
                 "Código": "Cupomp5",
-                "quantidade": 150, 
+                "quantidade": 300, 
                 data: '10/10/0000',
             }
         ]
