@@ -53,14 +53,14 @@ async function AddprodutosMirante(req, res) {
     const { id_produto, urls } = req.headers;
 
     // Verifica se id_produto e urls estão presentes no corpo da requisição
-    if (!id_produto || !urls ) {
+    if (!id_produto || !urls) {
         return res.status(400).json({ mensagem: 'Campos id_produto e urls são obrigatórios e urls deve ser um array não vazio.' });
     }
 
     const sql = 'INSERT INTO Mirante_Imagens (id_produto, nome_arquivo, url_arquivo) VALUES (?, ?, ?);';
 
     try {
-   
+
         // Itera sobre as URLs e insere cada uma no banco de dados
         // for (const url of urlsArray) {
         //     // Tenta executar a query no banco de dados para cada URL
@@ -68,7 +68,7 @@ async function AddprodutosMirante(req, res) {
         //     console.log(url)
         // }
         await executeQuery(sql, [id_produto, 'url', urls]);
-  
+
 
         return res.status(200).json({ mensagem: 'Registros inseridos com sucesso.' });
     } catch (error) {
@@ -91,7 +91,7 @@ function RequestMirante(req, res) {
             // Retornar status 200 em caso de sucesso
             if (response.status === 200) {
                 console.log('Requisição bem-sucedida!');
-                return res.status(200).json({ mensagem: 'Requisição bem-sucedida!.', PRODUTOS:response.data });
+                return res.status(200).json({ mensagem: 'Requisição bem-sucedida!.', PRODUTOS: response.data });
             } else {
                 console.log('Falha na requisição.');
                 return res.status(500).json({ mensagem: 'Falha na requisição.' });
@@ -109,7 +109,7 @@ function RequestMirante(req, res) {
 function ProdutosGaleria(req, res) {
     const { foder } = req.query;
     const url = `https://www.lojamirante.com.br/adm/produtos/getImagesByFolder/${foder ? foder : 0}`;
-    const cookie ='_gcl_au=1.1.841080069.1690978702; _fbp=fb.2.1690978701657.620299206; _ga_KC8Y9TJF7K=deleted; cartstack.com-cartid=NDgzMTY5NTI4; cartstack.com-bwrid=NjU2MDMzOTQ=; xe_visitor=eyJpZCI6IjBkNWE1ODBjLThiMjItNDZiMi04YTdlLWRmYjMyOTI4ODI2YyIsImVtYWlsIjoibWlkaWFsb2phbWlyYW50ZUBnbWFpbC5jb20iLCJjcGgiOiI0Nzk5MjkxMjIyMiJ9; dinLeadTrack=eyJyZWZlcnJlciI6Imxpbmt0ci5lZSIsInJlZmVycmVyX3Bvc3RlZCI6dHJ1ZSwidXNlcl9pbmZvX3R5cGUiOiJQQyIsInVzZXJfaW5mbyI6IlBRbUdPLkEuYzU5MCJ9; _gcl_aw=GCL.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gac_UA-98717817-1=1.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gid=GA1.3.2143227991.1698059131; dinTrafficSource=eyJ1cmwiOiJodHRwczovL3d3dy5sb2phbWlyYW50ZS5jb20uYnIvIiwicmVmZXJlciI6IiJ9; _clck=111r7iv|2|fg4|0|1322; xe_config=Mk43VTYyQjA5MCw0MjMzNzBFNC1EOUY2LTZGMTMtNEJCRS00OEY1NkZFQTJGQzksbG9qYW1pcmFudGUuY29tLmJy; _ga=GA1.3.1799049818.1690978702; _clsk=c4n4nr|1698147809479|8|1|u.clarity.ms/collect; ci_session=b3vonmm8qic6dnocn6hrbmj0ebfm5uhb; _ga_KC8Y9TJF7K=GS1.1.1698146198.102.1.1698147812.60.0.0'
+    const cookie = '_gcl_au=1.1.841080069.1690978702; _fbp=fb.2.1690978701657.620299206; _ga_KC8Y9TJF7K=deleted; cartstack.com-cartid=NDgzMTY5NTI4; cartstack.com-bwrid=NjU2MDMzOTQ=; xe_visitor=eyJpZCI6IjBkNWE1ODBjLThiMjItNDZiMi04YTdlLWRmYjMyOTI4ODI2YyIsImVtYWlsIjoibWlkaWFsb2phbWlyYW50ZUBnbWFpbC5jb20iLCJjcGgiOiI0Nzk5MjkxMjIyMiJ9; dinLeadTrack=eyJyZWZlcnJlciI6Imxpbmt0ci5lZSIsInJlZmVycmVyX3Bvc3RlZCI6dHJ1ZSwidXNlcl9pbmZvX3R5cGUiOiJQQyIsInVzZXJfaW5mbyI6IlBRbUdPLkEuYzU5MCJ9; _gcl_aw=GCL.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gac_UA-98717817-1=1.1697808786.CjwKCAjwysipBhBXEiwApJOcu6mRhuOBcCxGXrrnMHh4ZF9gGX76ZsydOvddWt4csmIp8DLsnHPPIRoCkWMQAvD_BwE; _gid=GA1.3.2143227991.1698059131; dinTrafficSource=eyJ1cmwiOiJodHRwczovL3d3dy5sb2phbWlyYW50ZS5jb20uYnIvIiwicmVmZXJlciI6IiJ9; _clck=111r7iv|2|fg4|0|1322; xe_config=Mk43VTYyQjA5MCw0MjMzNzBFNC1EOUY2LTZGMTMtNEJCRS00OEY1NkZFQTJGQzksbG9qYW1pcmFudGUuY29tLmJy; _ga=GA1.3.1799049818.1690978702; _clsk=c4n4nr|1698147809479|8|1|u.clarity.ms/collect; ci_session=b3vonmm8qic6dnocn6hrbmj0ebfm5uhb; _ga_KC8Y9TJF7K=GS1.1.1698146198.102.1.1698147812.60.0.0'
     axios.get(`${url}`, {
         headers: {
             Cookie: cookie
@@ -141,18 +141,50 @@ async function RequestDownload(req, res) {
     const { url } = req.query;
 
     if (!url) {
-      return res.status(400).json({ error: 'A URL deve ser fornecida.' });
+        return res.status(400).json({ error: 'A URL deve ser fornecida.' });
     }
-  
+
     try {
-      const response = await axios.get(url, { responseType: 'arraybuffer' });
-  
-      res.setHeader('Content-Type', 'application/octet-stream');
-      res.setHeader('Content-Disposition', `attachment; filename=${url.replace(/^.*[\\\/]/, '')}`);
-      res.send(response.data);
+        const response = await axios.get(url, { responseType: 'arraybuffer' });
+
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename=${url.replace(/^.*[\\\/]/, '')}`);
+        res.send(response.data);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Falha ao realizar o download do arquivo.' });
+        console.error(error);
+        res.status(500).json({ error: 'Falha ao realizar o download do arquivo.' });
+    }
+}
+
+
+async function testeCupom(req, res) {
+
+    try {
+        const arrayCupom = [
+            {
+                nome: 'nome',
+                quantidade: 50,
+                data: '10/10/0000',
+            },
+            {
+                nome: 'nome',
+                quantidade: 50,
+                data: '10/10/0000',
+            }
+        ]
+
+
+
+
+
+
+
+
+
+        res.send(arrayCupom);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Falha ao realizar o download do arquivo.' });
     }
 }
 
@@ -173,4 +205,4 @@ function executeQuery(sql, values) {
 
 
 
-module.exports = { produtosMirante, AddprodutosMirante, RequestMirante , RequestDownload, ProdutosGaleria}
+module.exports = { produtosMirante, AddprodutosMirante, RequestMirante, RequestDownload, ProdutosGaleria, testeCupom }
