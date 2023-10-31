@@ -162,13 +162,13 @@ async function testeCupom(req, res) {
     try {
         const arrayCupom = [
             {
-                nome: 'nome',
-                quantidade: 50,
+                "Código": "Cupomp5",
+                "quantidade": 150,
                 data: '10/10/0000',
             },
             {
-                nome: 'nome',
-                quantidade: 50,
+                "Código": "Cupomp5",
+                "quantidade": 150, 
                 data: '10/10/0000',
             }
         ]
