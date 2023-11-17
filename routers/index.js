@@ -10,10 +10,10 @@ const blog = require('../controller/blog/addBlog');
 const storage = require('../uploadImage');
 const jwt = require('jsonwebtoken');
 const mirante = require('../controller/MIRANTE/produtos');
-
 const multer = require('multer');
 const upload = multer();
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
+require('../controller/MIRANTE/cupons');
 
 
 // Middleware para liberar os headers
