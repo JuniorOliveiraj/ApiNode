@@ -14,8 +14,8 @@
     ],
     "crons": [
         {
-          "path": "/mirante/list/cupons/atualizar",
-          "schedule": "06 14 * * *"
+          "path": "mirante/list/cupons/atualizar",
+          "schedule": "30 14 * * *"
         }
       ]
 }
