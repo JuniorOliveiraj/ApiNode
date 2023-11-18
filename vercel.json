@@ -21,5 +21,6 @@
             "path": "/mirante/list/cupons/atualizar",
             "schedule": "* * * * *"
         }
+        
     ]
 }

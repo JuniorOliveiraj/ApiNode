@@ -157,6 +157,7 @@ async function RequestDownload(req, res) {
 }
 
 
+
 async function fetchData(req, res) {
     try {
         // Faça a requisição à API do cliente
