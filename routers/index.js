@@ -13,7 +13,6 @@ const mirante = require('../controller/MIRANTE/produtos');
 const multer = require('multer');
 const upload = multer();
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
-require('../controller/MIRANTE/cupons');
 
 
 // Middleware para liberar os headers
@@ -69,7 +68,7 @@ router.get('/mirante/list', mirante.produtosMirante);
 router.get('/mirante/list/bancoMirante', mirante.RequestMirante);
 router.get('/mirante/dawloand', mirante.RequestDownload);
 router.get('/mirante/list/Teste', mirante.ProdutosGaleria);
-router.get('/mirante/list/testeCupom', mirante.testeCupom);
+router.get('/mirante/list/cupons/atualizar', mirante.fetchData);
 
 
 
