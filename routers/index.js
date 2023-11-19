@@ -8,6 +8,7 @@ const cartao = require('../controller/gastos/gastosCartao');
 const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
 const storage = require('../uploadImage');
+const sorteio = require('../controller/sorteio')
 const jwt = require('jsonwebtoken');
 const mirante = require('../controller/MIRANTE/produtos');
 const multer = require('multer');
@@ -69,6 +70,9 @@ router.get('/mirante/list/bancoMirante', mirante.RequestMirante);
 router.get('/mirante/dawloand', mirante.RequestDownload);
 router.get('/mirante/list/Teste', mirante.ProdutosGaleria);
 router.get('/mirante/list/cupons/atualizar', mirante.fetchData);
+router.get('/sorteio/list', sorteio.BuscarParticipantes);
+router.get('/sorteio/verific', sorteio.Verificar);
+router.get('/sorteio/update', sorteio.updateSorteio);
 
 
 

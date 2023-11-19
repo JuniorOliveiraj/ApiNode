@@ -161,7 +161,7 @@ async function RequestDownload(req, res) {
 async function fetchData(req, res) {
     try {
         // Faça a requisição à API do cliente
-        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=VINI');
+        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=CupomP5,MIRANTE5,VOLTA5,carrinho5,presenteespecial,duda10,duda,figueredo10,FG7,vinicius10,VINI,emfoco10,EMFOCO	');
   
         // Verifique se a resposta contém dados
         if (response.data && Array.isArray(response.data)) {
