@@ -15,8 +15,8 @@ async function BuscarParticipantes(req, res) {
 async function Verificar(req, res) {
     const { id, sorteado } = req.query;
         try {
-        const sql = 'SELECT nome FROM Participantes WHERE id IN (?, ?)and view = 0';
-        const Participantes = await executeQuery(sql, [id, sorteado]);
+        const sql = 'SELECT nome FROM Participantes WHERE id IN (?, ?) and view = 0 ORDER BY FIELD(id, ?, ?) ';
+        const Participantes = await executeQuery(sql, [id, sorteado,id, sorteado]);
         return res.status(201).json({ dados: Participantes  });
 
     } catch (error) {
