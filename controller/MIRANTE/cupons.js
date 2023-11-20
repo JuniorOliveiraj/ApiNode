@@ -38,7 +38,7 @@ async function fetchData(req, res) {
 async function ListCupons(req, res) {
     try {
         const currentDate = new Date().toISOString().split('T')[0];
-        const sql = "select id, nome , data_por_dia as 'date' ,  usus as amount, status   from  Mirante_cupons   ORDER BY amount DESC";
+        const sql = "SELECT MIN(id) AS id, nome, MAX(data_por_dia) AS `date`, SUM(usus) AS amount, MIN(status) AS status FROM Mirante_cupons WHERE data_por_dia = (SELECT MAX(data_por_dia) FROM Mirante_cupons) GROUP BY nome ORDER BY amount DESC";
         const data = await executeQuery(sql, [currentDate]);
 
         return res.status(200).json({ mensagem: 'sucesso', dados: data, currentDate:currentDate });
