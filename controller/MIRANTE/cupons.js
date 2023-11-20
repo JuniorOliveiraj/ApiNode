@@ -17,7 +17,7 @@ async function fetchData(req, res) {
 
                 // Salve os dados no banco de dados
                 const currentDate = new Date().toISOString().split('T')[0];
-                const sql = 'INSERT INTO Mirante_cupons (nome, usus, data_por_dia, semana_do_ano, mes_do_ano, status) VALUES (?, ?, ?, WEEK(?), MONTH(?), ativo)';
+                const sql = "INSERT INTO Mirante_cupons (nome, usus, data_por_dia, semana_do_ano, mes_do_ano, status) VALUES (?, ?, ?, WEEK(?), MONTH(?), 'ativo')";
                 await executeQuery(sql, [Código, quantidadeInt, currentDate, currentDate, currentDate]);
             }
 
