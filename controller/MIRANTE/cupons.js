@@ -4,7 +4,7 @@ const axios = require('axios');
 async function fetchData(req, res) {
     try {
         // Faça a requisição à API do cliente
-        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=CupomP5,MIRANTE5,VOLTA5,carrinho5,presenteespecial,duda10,duda,figueredo10,FG7,vinicius10,VINI,emfoco10,EMFOCO	');
+        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=CupomP5,MIRANTE5,VOLTA5,carrinho5,presenteespecial,duda10,figueredo10,vinicius10,emfoco10');
 
         // Verifique se a resposta contém dados
         if (response.data && Array.isArray(response.data)) {
@@ -37,16 +37,19 @@ async function fetchData(req, res) {
 
 async function ListCupons(req, res) {
     try {
-        const currentDate = new Date().toISOString().split('T')[0];
-        const sql = "SELECT MIN(id) AS id, nome, MAX(data_por_dia) AS `date`, SUM(usus) AS amount, MIN(status) AS status FROM Mirante_cupons WHERE data_por_dia = (SELECT MAX(data_por_dia) FROM Mirante_cupons) GROUP BY nome ORDER BY amount DESC";
-        const data = await executeQuery(sql, [currentDate]);
+        const { date } = req.query;
 
-        return res.status(200).json({ mensagem: 'sucesso', dados: data, currentDate:currentDate });
+        const sql = "SELECT id, nome, data_por_dia AS `date`, usus AS amount,  status FROM Mirante_cupons WHERE data_por_dia = ? ORDER BY amount DESC";
+        const data = await executeQuery(sql, [date]);
+
+        return res.status(200).json({ mensagem: 'sucesso', dados: data, currentDate: date });
     } catch (error) {
         console.error('Erro ao atualizar os dados:', error.message);
         res.status(500).json({ error: 'Erro ao atualizar os dados:' });
     }
 }
+
+
 
 
 async function ChartCupons(req, res) {
@@ -76,7 +79,7 @@ async function ChartCupons(req, res) {
 
         const placeholders = names.map(() => '?').join(', ');
 
-        sql = `SELECT ${groupByField} AS time_period, nome, SUM(usus) AS total_usus
+        sql = `SELECT ${groupByField} AS time_period, nome, MAX(usus) AS total_usus
              FROM Mirante_cupons
              WHERE nome IN (${placeholders})
              GROUP BY ${groupByField}, nome;`;
