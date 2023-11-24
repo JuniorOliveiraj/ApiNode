@@ -15,10 +15,21 @@ async function fetchData(req, res) {
                 // Converta a quantidade para um número (se necessário)
                 const quantidadeInt = parseInt(quantidade, 10);
 
-                // Salve os dados no banco de dados
+                // Obtém a data atual no formato "YYYY-MM-DD"
                 const currentDate = new Date().toISOString().split('T')[0];
-                const sql = "INSERT INTO Mirante_cupons (nome, usus, data_por_dia, semana_do_ano, mes_do_ano, status) VALUES (?, ?, ?, WEEK(?), MONTH(?), 'ativo')";
-                await executeQuery(sql, [Código, quantidadeInt, currentDate, currentDate, currentDate]);
+
+                // Verifica se já existe um registro com o mesmo nome (Código)
+                const existingData = await executeQuery("SELECT * FROM Mirante_cupons WHERE nome = ? AND data_por_dia = ?", [Código, currentDate]);
+
+                if (existingData.length > 0) {
+                    // Se existir, atualiza os dados
+                    const updateSql = "UPDATE Mirante_cupons SET usus = ? WHERE nome = ? AND data_por_dia = ?";
+                    await executeQuery(updateSql, [quantidadeInt, Código, currentDate]);
+                } else {
+                    // Se não existir, insere os dados
+                    const insertSql = "INSERT INTO Mirante_cupons (nome, usus, data_por_dia, semana_do_ano, mes_do_ano, status) VALUES (?, ?, ?, WEEK(?), MONTH(?), 'ativo')";
+                    await executeQuery(insertSql, [Código, quantidadeInt, currentDate, currentDate, currentDate]);
+                }
             }
 
             console.log('Dados atualizados com sucesso!');
@@ -31,6 +42,8 @@ async function fetchData(req, res) {
         res.status(500).json({ error: 'Erro ao atualizar os dados:' });
     }
 }
+
+
 
 
 
