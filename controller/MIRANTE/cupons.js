@@ -67,10 +67,11 @@ async function ListCupons(req, res) {
 
 async function ChartCupons(req, res) {
     try {
-        const { names, formato } = req.query;
-
+        const { names, formato ,dateInit,dateEnd} = req.query;
         let sql = "";
         let groupByField = "";
+        let currentDate = new Date(); // Obter a data atual
+        let dataFinalAtual = currentDate.toISOString().split('T')[0];
 
         switch (formato.toLowerCase()) {
             case 'day':
@@ -90,15 +91,29 @@ async function ChartCupons(req, res) {
             return res.status(400).json({ error: 'Nomes inválidos. Forneça uma array de nomes.' });
         }
 
-        const placeholders = names.map(() => '?').join(', ');
+        const placeholders = names.map(() => "?").join(', ');
 
-        sql = `SELECT ${groupByField} AS time_period, nome, MAX(usus) AS total_usus
-             FROM Mirante_cupons
-             WHERE nome IN (${placeholders})
-             GROUP BY ${groupByField}, nome;`;
+        sql = `
+        SELECT
+             ds.time_period,
+             names.nome,
+             COALESCE(MAX(mc.usus), 0) AS total_usus
+        FROM
+            (
+                SELECT DISTINCT ${groupByField} AS time_period
+                FROM Mirante_cupons
+                WHERE data_por_dia BETWEEN ? AND ?
+            ) ds
+                CROSS JOIN
+                    (SELECT DISTINCT nome FROM Mirante_cupons WHERE nome IN (${placeholders})) names
+                LEFT JOIN
+                    Mirante_cupons mc ON ds.time_period = ${groupByField} AND names.nome = mc.nome
+                GROUP BY
+                    ds.time_period, names.nome order by time_period;
+        `;
 
         // Aqui você precisa substituir os placeholders pelos valores reais dos nomes
-        const values = [...names];
+        const values = [dateInit,dateEnd, ...names];
 
         // Execute a consulta SQL
         const dados = await executeQuery(sql, values);
@@ -106,13 +121,14 @@ async function ChartCupons(req, res) {
         // Transforme os dados para o formato desejado
         const formattedData = formatChartData(dados, formato);
 
-        return res.status(200).json({ mensagem: 'sucesso', data: formattedData, formato: formato });
+        return res.status(200).json({ mensagem: 'sucesso', data: formattedData, formato: formato ,});
 
     } catch (error) {
         console.error('Erro ao obter os dados:', error.message);
         res.status(500).json({ error: 'Erro ao obter os dados.' });
     }
 }
+
 
 
 
