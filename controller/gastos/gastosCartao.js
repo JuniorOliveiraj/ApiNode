@@ -12,6 +12,7 @@ async function FaturaCaro(req, res) {
 
     const regex = /💳(.*?)\nData: (\d{2}\/\d{2}\/\d{4}) às (\d{2}:\d{2})\nValor: R\$ ([\d,]+) à vista\nStatus: (\w+)/g;
     const regex2 = /💳(.*?)\n\*Data\*\: (\d{2}\/\d{2}\/\d{4}) às (\d{2}:\d{2})\n\*Valor\*\: R\$ ([\d,]+) à vista\n\*Status\*\: (\w+)/g;
+    const regex3 = /💳 (.*?)\n(?:estabelecimento: (.*(?:\n|$)))?\s*data: (\d{2}\/\d{2}\/\d{4}) às (\d{2}:\d{2})\nvalor:R\$ ([\d,]+) à vista/g;
 
     const compras = [];
     let match;
@@ -25,6 +26,12 @@ async function FaturaCaro(req, res) {
         while ((match = regex2.exec(gastos))) {
             const [_, nome, data, hora, valor, status] = match;
             compras.push({ nome, data, hora, valor, status });
+        }
+    }
+    if (compras.length === 0) {
+        while ((match = regex3.exec(gastos))) {
+            const [_, nome2, estabelecimento, data2, hora2, valor2] = match;
+            compras.push({ nome: nome2, estabelecimento, data: data2, hora: hora2, valor: valor2 });
         }
     }
 
@@ -105,7 +112,7 @@ function adicionargastosmanual(req, res) {
     if (!userID) {
         return res.status(501).json({ message: 'Nenhum id entregue.' });
     }
-const {nome, status, valor }=compra
+    const { nome, status, valor } = compra
     const dataAtual = new Date();
     const dataFormatted = moment(dataAtual).format('YYYY-MM-DD');
     const horaFormatted = moment(dataAtual).format('HH:mm:ss');
@@ -127,7 +134,7 @@ const {nome, status, valor }=compra
                 console.error('Erro ao guardar dados', err);
                 return res.status(500).json({ message: 'Erro ao buscar os gastos.' });
             }
-            return res.status(200).json({message: 'dados guardados com sucesso' });
+            return res.status(200).json({ message: 'dados guardados com sucesso' });
         });
     }
 }
@@ -142,4 +149,4 @@ function executeQuery(sql, values) {
         });
     });
 }
-module.exports = { FaturaCaro, buscarGastosUsuario , adicionargastosmanual};
+module.exports = { FaturaCaro, buscarGastosUsuario, adicionargastosmanual };
