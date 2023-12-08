@@ -31,7 +31,7 @@ async function FaturaCaro(req, res) {
     if (compras.length === 0) {
         while ((match = regex3.exec(gastos))) {
             const [_, nome2, estabelecimento, data2, hora2, valor2] = match;
-            compras.push({ nome: nome2, estabelecimento, data: data2, hora: hora2, valor: valor2, status: 'confirmada' });
+            compras.push({ nome: estabelecimento, estabelecimento, data: data2, hora: hora2, valor: valor2, status: 'confirmada' });
         }
     }
 
