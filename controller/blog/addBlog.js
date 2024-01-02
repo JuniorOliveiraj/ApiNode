@@ -110,7 +110,7 @@ async function ListBlog(req, res) {
 }
 async function readBlog(req, res) {
   const { id } = req.query;
-  if(!id){
+  if (!id) {
     return res.status(404).json({ error: 'id não encontrado.' });
   }
   try {
@@ -124,6 +124,7 @@ async function readBlog(req, res) {
             blogs.cover_link,
             blogs.comments,
             blogs.meta_title,
+            blogs.created_at,
             blogs.meta_description,
             blogs.created_at,
             users.name,
@@ -147,38 +148,44 @@ async function readBlog(req, res) {
       id: blog.id,
       cover: blog.cover_link,
       title: blog.title,
+      description: blog.description,
+
+      createdAt: blog.created_at,
+      view: 50,
       comment: blog.comments,
-      like:true,
+      share: 52,
+      favorite: 53,
+      like: true,
       author: {
         name: blog.name,
         avatarUrl: blog.avatarUrl
       },
+      tags: blog.tag_values.split(','),
+      body: blog.content,
+      favoritePerson: [],
       comments: [
-    {
-      "id": 2,
-      "name": "Alice Brown",
-      "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkb5MwXJPW1fkMe_RR8NDge491YmPLwJfe0J_73wkyuYpZwN-XQy7Jt73isBqWzO_ed7o&usqp=CAU",
-      "postedAt": "2023-07-02T10:00:00Z",
-      "message": "COMENTARIO DE TESTE.....",
-      "replyComment": [],
-      "users": []
-    }
+        {
+          "id": 2,
+          "name": "Alice Brown",
+          "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkb5MwXJPW1fkMe_RR8NDge491YmPLwJfe0J_73wkyuYpZwN-XQy7Jt73isBqWzO_ed7o&usqp=CAU",
+          "postedAt": "2023-07-02T10:00:00Z",
+          "message": "COMENTARIO DE TESTE.....",
+          "replyComment": [],
+          "users": []
+        }
 
       ],
-      tags:  blog.tag_values.split(',')
-      ,
-      favoritePerson: [ ],
+
       meta: [
         {
           title: blog.meta_title,
           description: blog.meta_description
         }
       ],
-      description: blog.description,
-      body: blog.content
+
 
     }));
-    
+
 
     return res.status(200).json({ message: 'TODOS OS BLOGS', BLOG: formattedBlogs[0] });
   } catch (error) {
