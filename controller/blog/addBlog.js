@@ -25,7 +25,7 @@ async function addBlog(req, res) {
           return res.status(400).json({ error: 'Dados do blog não fornecidos.' });
         }
 
-        const { title, description, content, cover, tags, comments, publish, metaTitle, metaDescription } = dadosBlog;
+        const { title, description, content, cover, tags, comments, publish, metaTitle, metaDescription , blogType} = dadosBlog;
         if (!title || !description || !content || !cover || !tags) {
           if (!title) {
             return res.status(400).json({ error: 'Título do blog não fornecido.' });
@@ -46,8 +46,8 @@ async function addBlog(req, res) {
 
         try {
           // Inserir o blog na tabela 'blogs'
-          const blogQuery = 'INSERT INTO blogs (title, description, content, cover_link, publish, meta_title, meta_description, user_id, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0];
+          const blogQuery = 'INSERT INTO blogs (title, description, content, cover_link, publish, meta_title, meta_description, user_id, comments, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0, !blogType ? 'BLOG' : 'PORTIFOLIO'];
           const blogResult = await executeQuery(blogQuery, blogValues);
           const blogId = blogResult.insertId;
 
@@ -83,9 +83,12 @@ async function addBlog(req, res) {
 
 async function ListBlog(req, res) {
   try {
-    const blogQuery = 'SELECT blogs.id,blogs.cover_link,blogs.title, users.name, users.avatarUrl FROM blogs INNER JOIN users ON blogs.user_id = users.id order by  blogs.created_at';
-    const blogValues = [];
-    const blogResult = await executeQuery(blogQuery, blogValues);
+    const { type, tag } = req.query;
+    const blogQuery = "SELECT blogs.id,blogs.cover_link,blogs.title, users.name, users.avatarUrl FROM blogs INNER JOIN users ON blogs.user_id = users.id where blogs.type = 'BLOG' order by  blogs.created_at";
+    const portifolio ='SELECT  blogs.id, blogs.cover_link,blogs.title, blogs.type, users.name, users.avatarUrl FROM  blogs INNER JOIN  users ON blogs.user_id = users.id  INNER JOIN  blog_tags ON blog_tags.blog_id = blogs.id GROUP BY  blogs.id HAVING  MAX(CASE WHEN blog_tags.tag_value = ?  THEN 1 ELSE 0 END) = 1 AND blogs.type = ?'
+    const blogValues = await  type && tag != null ? [ tag, type]:[];
+    const query = await type && tag != null ? portifolio:blogQuery
+    const blogResult = await executeQuery(query, blogValues);
     const data = new Date();
     const formattedBlogs = blogResult.map(blog => ({
       id: blog.id,
@@ -102,7 +105,10 @@ async function ListBlog(req, res) {
       },
     }));
 
-    return res.status(200).json({ message: 'TODOS OS BLOGS', BLOG: formattedBlogs });
+    return res.status(200).json({
+      message: 'TODOS OS BLOGS',
+      BLOG: formattedBlogs
+    });
   } catch (error) {
     console.error('Erro ao buscar os blogs:', error);
     return res.status(500).json({ error: 'Erro interno do servidor.' });
