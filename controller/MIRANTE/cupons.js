@@ -4,7 +4,7 @@ const axios = require('axios');
 async function fetchData(req, res) {
     try {
         // Faça a requisição à API do cliente
-        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=CupomP5,MIRANTE5,VOLTA5,carrinho5,presenteespecial,duda10,figueredo10,vinicius10,emfoco10,BLACK10,PAULO5');
+        const response = await axios.get('https://lojamirante.com.br/api/getCouponUse?codigo=CupomP5,MIRANTE5,VOLTA5,carrinho5,presenteespecial,duda10,figueredo10,vinicius10,emfoco10,BLACK10,PAULO5,GABI10');
 
         // Verifique se a resposta contém dados
         if (response.data && Array.isArray(response.data)) {
