@@ -134,6 +134,7 @@ async function readBlog(req, res) {
             blogs.meta_description,
             blogs.created_at,
             users.name,
+            users.role,
             users.avatarUrl,
             GROUP_CONCAT(blog_tags.tag_value) as tag_values
         FROM 
@@ -164,7 +165,8 @@ async function readBlog(req, res) {
       like: true,
       author: {
         name: blog.name,
-        avatarUrl: blog.avatarUrl
+        avatarUrl: blog.avatarUrl,
+        role:blog.role
       },
       tags: blog.tag_values.split(','),
       body: blog.content,
