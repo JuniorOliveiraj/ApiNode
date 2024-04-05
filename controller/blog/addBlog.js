@@ -84,8 +84,8 @@ async function addBlog(req, res) {
 async function ListBlog(req, res) {
   try {
     const { type, tag } = req.query;
-    const blogQuery = "SELECT blogs.id,blogs.cover_link,blogs.title, users.name, users.avatarUrl FROM blogs INNER JOIN users ON blogs.user_id = users.id where blogs.type = 'BLOG' order by  blogs.created_at";
-    const portifolio ='SELECT  blogs.id, blogs.cover_link,blogs.title, blogs.type, users.name, users.avatarUrl FROM  blogs INNER JOIN  users ON blogs.user_id = users.id  INNER JOIN  blog_tags ON blog_tags.blog_id = blogs.id GROUP BY  blogs.id HAVING  MAX(CASE WHEN blog_tags.tag_value = ?  THEN 1 ELSE 0 END) = 1 AND blogs.type = ?'
+    const blogQuery = "SELECT blogs.id,blogs.cover_link,blogs.title, users.displayName, users.photoURL FROM blogs INNER JOIN users ON blogs.user_id = users.id where blogs.type = 'BLOG' order by  blogs.created_at";
+    const portifolio ='SELECT  blogs.id, blogs.cover_link,blogs.title, blogs.type, users.displayName, users.photoURL FROM  blogs INNER JOIN  users ON blogs.user_id = users.id  INNER JOIN  blog_tags ON blog_tags.blog_id = blogs.id GROUP BY  blogs.id HAVING  MAX(CASE WHEN blog_tags.tag_value = ?  THEN 1 ELSE 0 END) = 1 AND blogs.type = ?'
     const blogValues = await  type && tag != null ? [ tag, type]:[];
     const query = await type && tag != null ? portifolio:blogQuery
     const blogResult = await executeQuery(query, blogValues);
@@ -101,7 +101,7 @@ async function ListBlog(req, res) {
       favorite: 1,
       author: {
         name: blog.name,
-        avatarUrl: blog.avatarUrl,
+        photoURL: blog.photoURL,
       },
     }));
 
@@ -133,9 +133,9 @@ async function readBlog(req, res) {
             blogs.created_at,
             blogs.meta_description,
             blogs.created_at,
-            users.name,
+            users.displayName,
             users.role,
-            users.avatarUrl,
+            users.photoURL,
             GROUP_CONCAT(blog_tags.tag_value) as tag_values
         FROM 
             blogs
@@ -164,8 +164,8 @@ async function readBlog(req, res) {
       favorite: 53,
       like: true,
       author: {
-        name: blog.name,
-        avatarUrl: blog.avatarUrl,
+        name: blog.displayName,
+        photoURL: blog.photoURL,
         role:blog.role
       },
       tags: blog.tag_values.split(','),
@@ -175,7 +175,7 @@ async function readBlog(req, res) {
         {
           "id": 2,
           "name": "Alice Brown",
-          "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkb5MwXJPW1fkMe_RR8NDge491YmPLwJfe0J_73wkyuYpZwN-XQy7Jt73isBqWzO_ed7o&usqp=CAU",
+          "photoURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkb5MwXJPW1fkMe_RR8NDge491YmPLwJfe0J_73wkyuYpZwN-XQy7Jt73isBqWzO_ed7o&usqp=CAU",
           "postedAt": "2023-07-02T10:00:00Z",
           "message": "COMENTARIO DE TESTE.....",
           "replyComment": [],

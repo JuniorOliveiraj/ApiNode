@@ -57,7 +57,7 @@ const AdicionarNoticia = async (req, res) => {
     const decoded = jwt.verify(token, key);
     const checkUser = 'select * from users where id = ?';
     const result = await executeQuery(checkUser, id);
-    if (result[0].role === 'ADM') {
+    if (result[0].permission_level  === 'ADM') {
 
       const data = new Date(); 
       const response = {

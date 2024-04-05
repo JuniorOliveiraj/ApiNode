@@ -29,7 +29,7 @@ function register(req, res) {
     }
 
     // Salve o usuário no banco de dados
-    const user = { name, email, password: hashedPassword, company: '1', status: 1, role: 'convidado' };
+    const user = { name, email, password: hashedPassword, role: 'convidado', status: 1, permission_level: 'convidado' };
     connection.query('INSERT INTO users SET ?', user, (err, result) => {
       if (err) {
         console.error('Erro ao inserir o usuário no banco de dados:', err);
@@ -127,10 +127,10 @@ const userList = async (req, res) => {
             id: user.id,
             avatarUrl: user.avatarUrl,
             name: user.name,
-            company: user.company,
+            role: user.role,
             isVerified: true,
             status: user.status === 1 ? 'active' : 'não',
-            role: user.role,
+            permission_level: user.permission_level,
           }));
           return res.status(200).json({ usersAll });
         } else {
@@ -143,24 +143,40 @@ const userList = async (req, res) => {
   }
 }
 
+
+
+
+
 function updateUser(req, res) {
   const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ message: 'Token de autorização não fornecido' });
   const { userID, form, urlImg } = req.query;
   if (!userID || !form || !urlImg) {
     res.status(500).json({ message: 'todos os dados devem ser mandado na requisição', });
   }
-  const { email, name, role, company } = form;
-  const values22 = [email, name, role, company, urlImg, userID];
-  if (!email || !name || !role || !company) {
+  const { email, displayName, permission_level, role } = form;
+  if (!email || !displayName || !permission_level || !role) {
     res.status(500).json({ message: 'form vazio', form: form });
   }
   const decoded = jwt.verify(token, key);
   if (decoded) {
     // Montar a query SQL
-    const sql = `UPDATE users SET email = ?, name = ?, role = ?, company = ?, avatarUrl = ? WHERE id = ?`;
-    const values = [email, name, role, company, urlImg, userID];
 
+    // Montar a query SQL base
+    let sql = `UPDATE users SET `;
+    const columns = Object.keys(form).filter(key => form[key] !== undefined);
+    const placeholders = columns.map(() => `?`).join(', ');
+
+    sql += columns.map(column => `${column} = ?`).join(', ');
+
+    // Montar o array de valores
+    const values = columns.map(column => form[column]);
+
+    sql += ' WHERE id = ?';
+    values.push(userID);
     // Executar a query no banco de dados
+    console.log(sql, values,);
+
     connection.query(sql, values, (err, result) => {
       if (err) {
         console.error('Erro ao atualizar o usuário:', err);
@@ -182,27 +198,35 @@ function updateUser(req, res) {
 
       }
     });
+
+
   }
 }
 
+
+
+
+
+
+
 const loaduser = async (req, res) => {
-  const { authorization ,id } = req.headers;
-  if ( !authorization || !id){
-    return res.status(500).json({ error: 'token não fornecido'});
+  const { authorization, id } = req.headers;
+  if (!authorization || !id) {
+    return res.status(500).json({ error: 'token não fornecido' });
   }
 
   try {
     const decoded = jwt.verify(authorization, key);
     if (decoded) {
-      connection.query('select * from users where id = ?', [id],(err, results) => {
+      connection.query('select * from users where id = ?', [id], (err, results) => {
         if (err) {
           console.error('Erro ao consultar o banco de dados:', err);
           return res.status(500).json({ error: 'Erro interno do servidor.' });
         }
         if (results.length > 0) {
-          return res.status(200).json({ user:results, token:authorization });
+          return res.status(200).json({ user: results, token: authorization });
         } else {
-          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado' , });
+          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado', });
         }
       });
     }

@@ -19,8 +19,8 @@ const updateuseradm = async (req, res) => {
     if (decoded) {
         const checkeduser = 'SELECT * FROM users where id = ? '
         const user = await executeQuery(checkeduser, [userID]);
-        if (user[0].role === 'ADM') {
-            const sqlUpdate = 'UPDATE  users SET role = ? WHERE (id = ?)'
+        if (user[0].permission_level  === 'ADM') {
+            const sqlUpdate = 'UPDATE  users SET permission_level = ? WHERE (id = ?)'
             const updateUser = await executeQuery(sqlUpdate, [cargo, userSelct])
             return res.status(200).json({ mensagem: 'ok', user });
         } else {
