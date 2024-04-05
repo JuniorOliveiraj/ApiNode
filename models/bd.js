@@ -11,6 +11,7 @@ const connection = mysql.createConnection({
   ssl: {
     rejectUnauthorized: true
   }
+  
 });
 
 
