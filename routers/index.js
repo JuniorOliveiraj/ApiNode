@@ -1,21 +1,28 @@
+//outros
+const multer = require('multer');
+const upload = multer();
+const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 const router = require("express").Router();
-const authController = require('../controller/authController');
-const editarUser = require('../controller/user/editarUser')
+//trabalho facull
 const noticias = require('../controller/newsApiExterna');
 const noticiasBuscar = require('../controller/noticiasBuscar');
-const agro = require('../controller/produtos');
+//dashboard
+const authController = require('../controller/authController');
+const editarUser = require('../controller/user/editarUser')
 const cartao = require('../controller/gastos/gastosCartao');
+const agro = require('../controller/produtos');
+const storage = require('../uploadImage');
+//site 
 const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
-const storage = require('../uploadImage');
 const sorteio = require('../controller/sorteio')
 const jwt = require('jsonwebtoken');
 //mirante
 const mirante = require('../controller/MIRANTE/produtos');
-const MIranteCupons = require('../controller/MIRANTE/cupons')
-const multer = require('multer');
-const upload = multer();
-const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
+const MIranteCupons = require('../controller/MIRANTE/cupons');
+const Zpl =require('../controller/MIRANTE/zpl')
+
+
 
 
 // Middleware para liberar os headers
@@ -76,6 +83,7 @@ router.get('/mirante/list/cupons/atualizar', MIranteCupons.fetchData);
 router.get('/mirante/list/cupons/list', MIranteCupons.ListCupons);
 router.get('/mirante/list/cupons/chart01', MIranteCupons.ChartCupons);
 router.get('/mirante/list/cupons/listNames', MIranteCupons.ListCuponsNames);
+router.post('/mirante/zpl/convert', upload.array('files') , Zpl.zplConvert);
 //sorteio
 router.get('/sorteio/list', sorteio.BuscarParticipantes);
 router.get('/sorteio/verific', sorteio.Verificar);
