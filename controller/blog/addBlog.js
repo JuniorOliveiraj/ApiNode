@@ -7,7 +7,6 @@ const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 async function addBlog(req, res) {
   try {
     const { userId, dadosBlog, urlCapa } = req.query;
-    const { authorization } = req.headers;
     const token = req.headers.authorization;
     if (!token) {
       return res.status(401).json({ error: 'Token de acesso não fornecido.' });
@@ -47,7 +46,7 @@ async function addBlog(req, res) {
         try {
           // Inserir o blog na tabela 'blogs'
           const blogQuery = 'INSERT INTO blogs (title, description, content, cover_link, publish, meta_title, meta_description, user_id, comments, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0, blogType ? 'BLOG' : 'PORTIFOLIO'];
+          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0, blogType === 'true' ? 'BLOG' : 'PORTIFOLIO'];
           const blogResult = await executeQuery(blogQuery, blogValues);
           const blogId = blogResult.insertId;
 
