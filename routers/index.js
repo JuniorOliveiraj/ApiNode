@@ -15,6 +15,7 @@ const storage = require('../uploadImage');
 //site 
 const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
+const tag = require('../controller/blog/BlogTags');
 const sorteio = require('../controller/sorteio')
 const jwt = require('jsonwebtoken');
 //mirante
@@ -73,8 +74,10 @@ router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
 router.get('/blog/list', blog.ListBlog);
 router.get('/blog/read', blog.readBlog);
+router.get('/blog/list/tags', tag.ListTags);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
 //mirante
+
 router.get('/mirante/list', mirante.produtosMirante);
 router.get('/mirante/list/bancoMirante', mirante.RequestMirante);
 router.get('/mirante/dawloand', mirante.RequestDownload);
