@@ -47,7 +47,7 @@ async function addBlog(req, res) {
         try {
           // Inserir o blog na tabela 'blogs'
           const blogQuery = 'INSERT INTO blogs (title, description, content, cover_link, publish, meta_title, meta_description, user_id, comments, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0, !blogType ? 'BLOG' : 'PORTIFOLIO'];
+          const blogValues = [title, description, content, urlCapa, publish ? 1 : 0, metaTitle, metaDescription, userId, comments ? 1 : 0, blogType ? 'BLOG' : 'PORTIFOLIO'];
           const blogResult = await executeQuery(blogQuery, blogValues);
           const blogId = blogResult.insertId;
 
