@@ -14,9 +14,14 @@ const agro = require('../controller/produtos');
 const storage = require('../uploadImage');
 //site 
 const thema = require('../controller/user/theme');
-
+const blog = require('../controller/blog/addBlog');
 const sorteio = require('../controller/sorteio')
 const jwt = require('jsonwebtoken');
+//mirante
+const mirante = require('../controller/MIRANTE/produtos');
+const MIranteCupons = require('../controller/MIRANTE/cupons');
+const Zpl =require('../controller/MIRANTE/zpl')
+
 
 
 
@@ -65,11 +70,20 @@ router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateT
 router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticateToken );
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
-router.use('/blog', require('./Blog'));
+router.get('/blog/adicionar', blog.addBlog);
+router.get('/blog/list', blog.ListBlog);
+router.get('/blog/read', blog.readBlog);
 router.post('/storage/upload',upload.any() , storage.uploadImagem);
 //mirante
-
-router.use('/mirante', require('./mirante'));
+router.get('/mirante/list', mirante.produtosMirante);
+router.get('/mirante/list/bancoMirante', mirante.RequestMirante);
+router.get('/mirante/dawloand', mirante.RequestDownload);
+router.get('/mirante/list/Teste', mirante.ProdutosGaleria);
+router.get('/mirante/list/cupons/atualizar', MIranteCupons.fetchData);
+router.get('/mirante/list/cupons/list', MIranteCupons.ListCupons);
+router.get('/mirante/list/cupons/chart01', MIranteCupons.ChartCupons);
+router.get('/mirante/list/cupons/listNames', MIranteCupons.ListCuponsNames);
+router.post('/mirante/zpl/convert', upload.array('files') , Zpl.zplConvert);
 //sorteio
 router.get('/sorteio/list', sorteio.BuscarParticipantes);
 router.get('/sorteio/verific', sorteio.Verificar);
