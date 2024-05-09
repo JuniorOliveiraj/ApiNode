@@ -72,6 +72,7 @@ router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticate
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
+router.get('/blog/update', blog.updateBlog);
 router.get('/blog/list', blog.ListBlog);
 router.get('/blog/read', blog.readBlog);
 router.get('/blog/list/tags', tag.ListTags);
