@@ -12,7 +12,6 @@ const editarUser = require('../controller/user/editarUser')
 const cartao = require('../controller/gastos/gastosCartao');
 const agro = require('../controller/produtos');
 const storage = require('../uploadImage');
-const gastosCard = require('../controller/gastos/analytics/gastosCard')
 //site 
 const thema = require('../controller/user/theme');
 const blog = require('../controller/blog/addBlog');
@@ -52,33 +51,26 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
-//auth
 router.get('/register', authController.register);
 router.get('/login', authController.login);
-//users
 router.get('/users/list', authController.userList, authenticateToken);
 router.get('/users/update', authController.updateUser, authenticateToken);
 router.get('/users/userLoad', authController.loaduser, authenticateToken);
 router.get('/users/tornar-adm', editarUser.updateuseradm, authenticateToken);
 router.get('/set-theme', thema.listaridNoticia);
-// trabalho faculdade
 router.get('/noticias/buscarNoticias', noticias.buscarNoticias);
 router.get('/favoritos/adicionar', noticias.adicionarNoticias);
 router.get('/favoritos/listar', noticias.listarFavoritas);
-router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
-router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/private', authenticateToken, authController.privateFunction);
-//produtos agro
 router.get('/produtos/adicionar', agro.addProdutos);
 router.get('/produtos/listar-todos', agro.allProduct, authenticateToken);
 router.get('/produtos/delet', agro.deletProduto);
 router.get('/produtos/prvate', authController.privateFunction, authenticateToken);
-// castos pessoais 
 router.get('/gatos/cartao', cartao.FaturaCaro);
 router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken );
 router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticateToken );
-router.get('/gatos/card/balanceCard', gastosCard.balanceCard, authenticateToken );
-//blog 
+router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
+router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
 router.get('/blog/update', blog.updateBlog);
 router.get('/blog/list', blog.ListBlog);
