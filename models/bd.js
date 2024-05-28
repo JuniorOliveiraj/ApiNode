@@ -7,10 +7,11 @@ const connection = mysql.createConnection({
   host: process.env.CLOUD_BD,
   user:  process.env.USER_BD,
   password: process.env.PASSWORD_BD,
-  database: 'bd-oliveira',
-  ssl: {
-    rejectUnauthorized: true
-  }
+  database: process.env.BD_NAME,
+  port: 3000, // Adicione esta linha para especificar a porta
+  // ssl: {
+  //   rejectUnauthorized: true
+  // }
   
 });
 
