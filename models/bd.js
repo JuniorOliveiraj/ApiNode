@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   user:  process.env.USER_BD,
   password: process.env.PASSWORD_BD,
   database: process.env.BD_NAME,
-  port: 3000, // Adicione esta linha para especificar a porta
+  port: process.env.PORT, // Adicione esta linha para especificar a porta
   // ssl: {
   //   rejectUnauthorized: true
   // }
