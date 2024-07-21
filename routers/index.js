@@ -21,7 +21,8 @@ const jwt = require('jsonwebtoken');
 //mirante
 const mirante = require('../controller/MIRANTE/produtos');
 const MIranteCupons = require('../controller/MIRANTE/cupons');
-const Zpl =require('../controller/MIRANTE/zpl')
+const Zpl =require('../controller/MIRANTE/zpl');
+const charts = require('../controller/ChartsNotion/Banking')
 
 
 
@@ -92,6 +93,8 @@ router.post('/mirante/zpl/convert', upload.array('files') , Zpl.zplConvert);
 router.get('/sorteio/list', sorteio.BuscarParticipantes);
 router.get('/sorteio/verific', sorteio.Verificar);
 router.get('/sorteio/update', sorteio.updateSorteio);
+//Charts Notion
+router.get('/charts/gastos', charts.SaldoEmConta);
 
 
 
