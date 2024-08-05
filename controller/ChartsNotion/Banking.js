@@ -1,7 +1,7 @@
 const connection = require('../../models/bd'); // Importe a configuração de conexão com o banco de dados
 
 
-const SaldoEmConta = async (req, res) => {
+const GastosTotais = async (req, res) => {
     const QUERY = `
         SELECT 
         DATE_FORMAT(CURDATE(), '%Y-%m') AS 'Mes', 
@@ -37,6 +37,47 @@ const SaldoEmConta = async (req, res) => {
     }
 }
 
+
+
+
+const SaldoEmConta = async (req, res) => {
+    const QUERY = `
+        SELECT
+            SUM(notion_property_conta) AS 'Total'
+            FROM
+                saldo_conta_notion
+            WHERE
+            YEAR(notion_data) = YEAR(CURDATE()) AND
+            MONTH(notion_data) = MONTH(CURDATE());`;
+    query2 =  `
+        SELECT 
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 2 THEN notion_property_conta ELSE 0 END) AS Segunda_feira,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 3 THEN notion_property_conta ELSE 0 END) AS Terca_feira,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 4 THEN notion_property_conta ELSE 0 END) AS Quarta_feira,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 5 THEN notion_property_conta ELSE 0 END) AS Quinta_feira,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 6 THEN notion_property_conta ELSE 0 END) AS Sexta_feira,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 7 THEN notion_property_conta ELSE 0 END) AS Sabado,
+        SUM(CASE WHEN DAYOFWEEK(notion_data) = 1 THEN notion_property_conta ELSE 0 END) AS Domingo
+
+        FROM 
+            saldo_conta_notion
+        WHERE
+            YEARWEEK(notion_data, 1) = YEARWEEK(CURDATE(), 1);
+    `;
+    const result = await executeQuery(QUERY, []);
+    const result2 = await executeQuery(query2, []);
+    if (result && result2) {
+        const chartValues = Object.values(result2[0]);
+        const chartKeys = Object.keys(result2[0]);
+        return res.status(200).json({ mensagem: 'ok', values:result, charts:chartValues, week:chartKeys });
+    } else {
+        return res.status(401).json({ error: 'sem dados na query ou erro interno' });
+    }
+}
+
+
+
+
 function executeQuery(sql, values) {
     return new Promise((resolve, reject) => {
         connection.query(sql, values, (err, result) => {
@@ -50,5 +91,6 @@ function executeQuery(sql, values) {
 }
 
 module.exports = {
-    SaldoEmConta
+    SaldoEmConta,
+    GastosTotais
 }

@@ -94,7 +94,8 @@ router.get('/sorteio/list', sorteio.BuscarParticipantes);
 router.get('/sorteio/verific', sorteio.Verificar);
 router.get('/sorteio/update', sorteio.updateSorteio);
 //Charts Notion
-router.get('/charts/gastos', charts.SaldoEmConta);
+router.get('/charts/gastos', charts.GastosTotais);
+router.get('/charts/saldo', charts.SaldoEmConta);
 
 
 
