@@ -24,6 +24,10 @@ const MIranteCupons = require('../controller/MIRANTE/cupons');
 const Zpl =require('../controller/MIRANTE/zpl');
 const charts = require('../controller/ChartsNotion/Banking')
 
+// Analytics Banking
+const mercadoPago = require('../controller/gastos/analytics/gastosMercadoPagoJson')
+
+
 
 
 
@@ -96,6 +100,9 @@ router.get('/sorteio/update', sorteio.updateSorteio);
 //Charts Notion
 router.get('/charts/gastos', charts.GastosTotais);
 router.get('/charts/saldo', charts.SaldoEmConta);
+
+// gastos
+router.post('/add/gastos/jsonMercadoPago', mercadoPago.PegarDadosMercadoPadoJsonPadrao);
 
 
 
