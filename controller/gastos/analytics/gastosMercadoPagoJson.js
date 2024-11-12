@@ -65,10 +65,24 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
     return res.status(204).json({ mensagem: 'Nenhum dado novo para inserir.' });
 }
 
+
+async function RetornarDadosMercadoPadoJsonMes(req, res) {
+
+    const query = "SELECT name, avatarImage, data FROM gastos_mensais_notion WHERE MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE())";
+    const resultadoVerificacao = await executeQuery(query, []);
+    console.log(resultadoVerificacao)
+    return res.status(200).json({ mensagem: 'Sucesso', resultadoVerificacao });
+
+}
+
+
+
 // Função para gerar UUID aleatório
 function generateUUID() {
     return require('crypto').randomUUID();
 }
+
+
 
 function executeQuery(sql, values) {
     return new Promise((resolve, reject) => {
@@ -82,4 +96,4 @@ function executeQuery(sql, values) {
     });
 }
 
-module.exports = { PegarDadosMercadoPadoJsonPadrao };
+module.exports = { PegarDadosMercadoPadoJsonPadrao, RetornarDadosMercadoPadoJsonMes };

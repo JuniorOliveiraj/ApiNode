@@ -103,6 +103,7 @@ router.get('/charts/saldo', charts.SaldoEmConta);
 
 // gastos
 router.post('/add/gastos/jsonMercadoPago', mercadoPago.PegarDadosMercadoPadoJsonPadrao);
+router.get('/list/gastos/todos', mercadoPago.RetornarDadosMercadoPadoJsonMes);
 
 
 
