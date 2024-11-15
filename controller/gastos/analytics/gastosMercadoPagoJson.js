@@ -82,6 +82,40 @@ function generateUUID() {
     return require('crypto').randomUUID();
 }
 
+async function BuscarGastosTotais(req, res) {
+    const { mes, ano } = req.query;
+
+    const mesAtual = !mes ?  new Date().getMonth() + 1: mes;
+    const anoAtual = !ano ? new Date().getFullYear(): ano;
+    
+    const  queryGastos = `
+        SELECT 
+        SUM(valor) AS 'Total'
+        FROM 
+            gastos_mensais_notion
+        WHERE
+        YEAR(data) = ? AND 
+        MONTH(data) = ?;
+        `
+        ;
+    const queryMesGasto = `
+               SELECT 
+        DATE_FORMAT(CURDATE(), '%Y-%m') AS 'Mes'
+        FROM 
+            gastos_mensais_notion
+        WHERE
+        YEAR(data) = ? AND 
+        MONTH(data) = ?
+        GROUP BY 'Mes';`;
+    const result = await executeQuery(queryGastos, [anoAtual, mesAtual]);
+    const result2 = await executeQuery(queryMesGasto, [anoAtual, mesAtual]);
+    if (result && result2) {
+        return res.status(200).json({ mensagem: 'ok', result,result2 });
+    } else {
+        return res.status(401).json({ error: 'sem dados na query ou erro interno' });
+    }
+}
+
 
 
 function executeQuery(sql, values) {
@@ -96,4 +130,4 @@ function executeQuery(sql, values) {
     });
 }
 
-module.exports = { PegarDadosMercadoPadoJsonPadrao, RetornarDadosMercadoPadoJsonMes };
+module.exports = { PegarDadosMercadoPadoJsonPadrao, RetornarDadosMercadoPadoJsonMes , BuscarGastosTotais};

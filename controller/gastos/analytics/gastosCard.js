@@ -1,10 +1,10 @@
 const connection = require('../../../models/bd');
 const jwt = require('jsonwebtoken');
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
-const moment = require('moment');
 
 
-async function  balanceCard(req, res) {
+
+async function balanceCard(req, res) {
     const { userID, dataAtual } = req.query;
     const token = req.headers.authorization;
     if (!token) {
@@ -32,16 +32,13 @@ async function  balanceCard(req, res) {
         WHERE u.id = 9 and c.id=1`
         const blogValues = [];
         const blogResult = await executeQuery(blogQuery, blogValues);
-        return res.status(200).json({ message: 'sucesso conexão', cardBalance:blogResult});
+        return res.status(200).json({ message: 'sucesso conexão', cardBalance: blogResult });
     }
 
-
-    
-
-
-
-
 }
+
+
+
 
 function executeQuery(sql, values) {
     return new Promise((resolve, reject) => {
