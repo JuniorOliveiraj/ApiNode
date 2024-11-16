@@ -39,7 +39,7 @@ WHERE
     if (result && result2) {
         const chartValues = Object.values(result2[0]);
         const chartKeys = Object.keys(result2[0]);
-        return res.status(200).json({ mensagem: 'ok', values: result, charts: chartValues, week: chartKeys });
+        return res.status(200).json({ mensagem: 'ok', values: result, charts:[{data:chartValues}] , week: chartKeys });
     } else {
         return res.status(401).json({ error: 'sem dados na query ou erro interno' });
     }
