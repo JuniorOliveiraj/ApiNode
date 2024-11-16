@@ -85,10 +85,10 @@ function generateUUID() {
 async function BuscarGastosTotais(req, res) {
     const { mes, ano } = req.query;
 
-    const mesAtual = !mes ?  new Date().getMonth() + 1: mes;
-    const anoAtual = !ano ? new Date().getFullYear(): ano;
-    
-    const  queryGastos = `
+    const mesAtual = !mes ? new Date().getMonth() + 1 : mes;
+    const anoAtual = !ano ? new Date().getFullYear() : ano;
+
+    const queryGastos = `
         SELECT 
         SUM(valor) AS 'Total'
         FROM 
@@ -96,25 +96,42 @@ async function BuscarGastosTotais(req, res) {
         WHERE
         YEAR(data) = ? AND 
         MONTH(data) = ?;
-        `
-        ;
+    `;
+
     const queryMesGasto = `
-               SELECT 
+        SELECT 
         DATE_FORMAT(CURDATE(), '%Y-%m') AS 'Mes'
         FROM 
             gastos_mensais_notion
         WHERE
         YEAR(data) = ? AND 
         MONTH(data) = ?
-        GROUP BY 'Mes';`;
-    const result = await executeQuery(queryGastos, [anoAtual, mesAtual]);
-    const result2 = await executeQuery(queryMesGasto, [anoAtual, mesAtual]);
-    if (result && result2) {
-        return res.status(200).json({ mensagem: 'ok', result,result2 });
-    } else {
-        return res.status(401).json({ error: 'sem dados na query ou erro interno' });
+        GROUP BY 'Mes';
+    `;
+
+    try {
+        const result = await executeQuery(queryGastos, [anoAtual, mesAtual]);
+        const result2 = await executeQuery(queryMesGasto, [anoAtual, mesAtual]);
+
+        if (result.length && result2.length) {
+            // Acessa o valor de 'Total' e 'Mes' diretamente
+            const totalGastos = result[0]?.Total || 0;
+            const mesAtualFormatado = result2[0]?.Mes || null;
+
+            return res.status(200).json({
+                mensagem: 'ok',
+                total: totalGastos,
+                mes: mesAtualFormatado,
+            });
+        } else {
+            return res.status(404).json({ error: 'Sem dados na query' });
+        }
+    } catch (error) {
+        console.error('Erro ao executar a query:', error);
+        return res.status(500).json({ error: 'Erro interno do servidor' });
     }
 }
+
 
 
 
