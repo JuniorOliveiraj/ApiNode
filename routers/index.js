@@ -94,9 +94,11 @@ router.get('/mirante/list/cupons/chart01', MIranteCupons.ChartCupons);
 router.get('/mirante/list/cupons/listNames', MIranteCupons.ListCuponsNames);
 router.post('/mirante/zpl/convert', upload.array('files') , Zpl.zplConvert);
 //sorteio
-router.get('/sorteio/list', sorteio.BuscarParticipantes);
-router.get('/sorteio/verific', sorteio.Verificar);
-router.get('/sorteio/update', sorteio.updateSorteio);
+
+ 
+router.get('/sorteio/cadastrar', sorteio.CadastrarParticipante);
+router.get('/sorteio/realizar', sorteio.RealizarSorteio);
+router.get('/sorteio/visualizar', sorteio.VisualizarSorteio);
 //Charts Notion
 router.get('/charts/gastos', charts.GastosTotais);
 router.get('/charts/saldo', charts.SaldoEmConta);
