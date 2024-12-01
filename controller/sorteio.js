@@ -138,7 +138,7 @@ async function RealizarSorteio(req, res) {
         // Passo 4: Gerar lista de links de sorteados
         const links = combinacoes.map(({ sorteado }) => ({
             nome: sorteado.name,
-            link: `http://localhost:3000/sorteio/verificar/${sorteado.id}`
+            link: `https://juniorbelem.com/sorteio/verificar/${sorteado.id}`
         }));
 
         return res.status(200).json({
