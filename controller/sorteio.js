@@ -50,7 +50,7 @@ async function VisualizarSorteio(req, res) {
 
         // Verificar se o participante já visualizou o sorteio
         if (resultado[0].viewed) {
-            return res.status(403).json({ mensagem: 'Você já visualizou este sorteio.' });
+            return res.status(200).json({ mensagem: 'Você já visualizou este sorteio.' });
         }
 
         // Atualizar para "visualizado"
