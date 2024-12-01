@@ -45,7 +45,7 @@ async function VisualizarSorteio(req, res) {
         const resultado = await executeQuery(visualizarQuery, [participantId]);
 
         if (resultado.length === 0) {
-            return res.status(404).json({ mensagem: 'Nenhum sorteio encontrado para este participante.' });
+            return res.status(200).json({ mensagem: 'Nenhum sorteio encontrado para este participante.' });
         }
 
         // Verificar se o participante já visualizou o sorteio
