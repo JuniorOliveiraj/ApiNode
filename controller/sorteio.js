@@ -135,9 +135,15 @@ async function RealizarSorteio(req, res) {
 
         console.log('Resultado da inserção no banco:', resultadoInsercao);
 
+        // Passo 4: Gerar lista de links de sorteados
+        const links = combinacoes.map(({ sorteado }) => ({
+            nome: sorteado.name,
+            link: `http://localhost:3000/sorteio/verificar/${sorteado.id}`
+        }));
+
         return res.status(200).json({
             mensagem: 'Sorteio realizado com sucesso.',
-            combinacoes,
+            links,
         });
     } catch (error) {
         console.error('Erro ao realizar sorteio:', error);
@@ -153,6 +159,7 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]]; // Troca os elementos
     }
 }
+
 
 
 module.exports = { 
