@@ -41,7 +41,7 @@ async function VisualizarSorteio(req, res) {
         const visualizarQuery = `
             SELECT id_sorteador, nome_sorteado, viewed
             FROM sorteios
-            WHERE id_sorteador = 1 AND (viewed <> 1 OR viewed IS NULL);`;
+            WHERE id_sorteador = ? AND (viewed <> 1 OR viewed IS NULL);`;
         const resultado = await executeQuery(visualizarQuery, [participantId]);
 
         if (resultado.length === 0) {
