@@ -67,8 +67,24 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
 
 
 async function RetornarDadosMercadoPadoJsonMes(req, res) {
+    const { mes, ano } = req.query;
 
-    const query = "SELECT id, name, avatarImage, data, valor, handleNotion FROM gastos_mensais_notion WHERE MONTH(data) = MONTH(CURDATE()) AND YEAR(data) = YEAR(CURDATE()) ORDER BY data DESC;";
+    const mesAtual = !mes ? new Date().getMonth() + 1 : mes;
+    const anoAtual = !ano ? new Date().getFullYear() : ano;
+
+    const query = `SELECT 
+    id, 
+    name, 
+    avatarImage,
+    data, 
+    valor, 
+    handleNotion 
+    FROM 
+        gastos_mensais_notion 
+            WHERE     
+                YEAR(data) = ? AND 
+                MONTH(data) = ?
+                ORDER BY data DESC;`;
     const resultadoVerificacao = await executeQuery(query, []);
     console.log(resultadoVerificacao)
     return res.status(200).json({ mensagem: 'Sucesso', resultadoVerificacao });
