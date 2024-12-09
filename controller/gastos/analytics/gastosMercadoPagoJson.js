@@ -44,7 +44,7 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
 
         // Se não existir o registro, adicionar à lista de inserção
         if (resultadoVerificacao && resultadoVerificacao[0] && resultadoVerificacao[0].total === 0) {
-            valoresParaInserir.push([ nome, amount, amount, description, date, imageUrl, origin]);
+            valoresParaInserir.push([nome, amount, amount, description, date, imageUrl, origin]);
         }
     }
 
@@ -72,20 +72,20 @@ async function RetornarDadosMercadoPadoJsonMes(req, res) {
     const mesAtual = !mes ? new Date().getMonth() + 1 : mes;
     const anoAtual = !ano ? new Date().getFullYear() : ano;
 
-    const query = `SELECT 
+    const query = `
+    SELECT 
     id, 
     name, 
     avatarImage,
     data, 
     valor, 
-    handleNotion 
-    FROM 
-        gastos_mensais_notion 
-            WHERE     
-                YEAR(data) = ? AND 
-                MONTH(data) = ?
-                ORDER BY data DESC;`;
-    const resultadoVerificacao = await executeQuery(query, []);
+    handleNotion  
+    FROM  gastos_mensais_notion 
+    WHERE     
+        YEAR(data) = ? AND 
+        MONTH(data) = ?
+        ORDER BY data DESC;`;
+    const resultadoVerificacao = await executeQuery(query, [anoAtual, mesAtual]);
     console.log(resultadoVerificacao)
     return res.status(200).json({ mensagem: 'Sucesso', resultadoVerificacao });
 
@@ -163,4 +163,4 @@ function executeQuery(sql, values) {
     });
 }
 
-module.exports = { PegarDadosMercadoPadoJsonPadrao, RetornarDadosMercadoPadoJsonMes , BuscarGastosTotais};
+module.exports = { PegarDadosMercadoPadoJsonPadrao, RetornarDadosMercadoPadoJsonMes, BuscarGastosTotais };
