@@ -75,17 +75,22 @@ async function RetornarDadosMercadoPadoJsonMes(req, res) {
 
     const query = `
     SELECT 
-    id, 
-    name, 
-    avatarImage,
-    data, 
-    valor, 
-    handleNotion  
-    FROM  gastos_mensais_notion 
+    A.id, 
+    A.name, 
+    A.avatarImage,
+    A.data, 
+    A.valor, 
+    C.nome_categoria category,
+    A.handleNotion  
+    FROM  gastos_mensais_notion A 
+     JOIN 
+        compra_categoria B ON A.id = B.id_compra
+     JOIN 
+        categorias_compras C ON B.id_categoria = C.id_categoria    
     WHERE     
-        YEAR(data) = ? AND 
-        MONTH(data) = ?
-        ORDER BY data DESC;`;
+        YEAR(A.data) = ? AND 
+        MONTH(A.data) = ?
+        ORDER BY A.data DESC;`;
     const resultadoVerificacao = await executeQuery(query, [anoAtual, mesAtual]);
     console.log(resultadoVerificacao)
     return res.status(200).json({ mensagem: 'Sucesso', resultadoVerificacao });
