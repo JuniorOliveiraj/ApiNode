@@ -25,7 +25,8 @@ const Zpl =require('../controller/MIRANTE/zpl');
 const charts = require('../controller/ChartsNotion/Banking')
 
 // Analytics Banking
-const mercadoPago = require('../controller/gastos/analytics/gastosMercadoPagoJson')
+const mercadoPago = require('../controller/gastos/analytics/gastosMercadoPagoJson');
+const AddCategorias = require('../controller/gastos/analytics/AddCategorias');
 
 
 
@@ -107,6 +108,8 @@ router.get('/charts/saldo', charts.SaldoEmConta);
 router.post('/add/gastos/jsonMercadoPago', mercadoPago.PegarDadosMercadoPadoJsonPadrao);
 router.get('/list/gastos/todos', mercadoPago.RetornarDadosMercadoPadoJsonMes);
 router.get('/list/gastos/total', mercadoPago.BuscarGastosTotais);
+
+router.get('/list/gastos/steste', AddCategorias.AtualizarCategorias);
 
 
 

@@ -1,5 +1,5 @@
 const connection = require('../../../models/bd');
-
+const AddCategorias = require('./AddCategorias');
 async function PegarDadosMercadoPadoJsonPadrao(req, res) {
     const data = req.body;
 
@@ -56,9 +56,10 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
             VALUES ?
         `;
         const insertResult = await executeQuery(insertQuery, [valoresParaInserir]);
-
+                
         if (insertResult) {
-            return res.status(200).json({ mensagem: 'Dados inseridos com sucesso.' });
+            const log = AddCategorias.AtualizarCategorias();
+            return res.status(200).json({ mensagem: 'Dados inseridos com sucesso.' , LogCategorias:log});
         }
     }
 
