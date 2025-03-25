@@ -81,6 +81,7 @@ async function RetornarDadosMercadoPadoJsonMes(req, res) {
     A.data, 
     A.valor, 
     C.nome_categoria category,
+    C.icon icon,
     A.handleNotion  
     FROM  gastos_mensais_notion A 
      JOIN 
