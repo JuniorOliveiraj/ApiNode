@@ -30,7 +30,8 @@ const AddCategorias = require('../controller/gastos/analytics/AddCategorias');
 const { BuscarCategoriaDoMes,
   BuscarGastosTotais,
   RetornarDadosMercadoPadoJsonMes,
-  PegarDadosMercadoPadoJsonPadrao
+  PegarDadosMercadoPadoJsonPadrao,
+  BuscarCategoriaDoMesTotal
 } = require('../controller/gastos/analytics/index');
 
 
@@ -116,6 +117,7 @@ router.post('/add/gastos/jsonMercadoPago', PegarDadosMercadoPadoJsonPadrao);
 router.get('/list/gastos/todos', RetornarDadosMercadoPadoJsonMes);
 router.get('/list/gastos/total', BuscarGastosTotais);
 router.get('/list/gastos/categorias', BuscarCategoriaDoMes);
+router.get('/list/gastos/categorias/total', BuscarCategoriaDoMesTotal);
 
 
 

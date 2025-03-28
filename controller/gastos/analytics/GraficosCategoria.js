@@ -95,4 +95,4 @@ async function BuscarCategoriaDoMes(req, res) {
 
 }
 
-module.exports = { BuscarCategoriaDoMes };
+module.exports = { BuscarCategoriaDoMes, BuscarCategoriaDoMesTotal };
