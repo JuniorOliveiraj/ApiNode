@@ -21,12 +21,19 @@ const jwt = require('jsonwebtoken');
 //mirante
 const mirante = require('../controller/MIRANTE/produtos');
 const MIranteCupons = require('../controller/MIRANTE/cupons');
-const Zpl =require('../controller/MIRANTE/zpl');
+const Zpl = require('../controller/MIRANTE/zpl');
 const charts = require('../controller/ChartsNotion/Banking')
 
 // Analytics Banking
-const mercadoPago = require('../controller/gastos/analytics/gastosMercadoPagoJson');
+//const mercadoPago = require('../controller/gastos/analytics/gastosMercadoPagoJson');
 const AddCategorias = require('../controller/gastos/analytics/AddCategorias');
+const { BuscarCategoriaDoMes,
+  BuscarGastosTotais,
+  RetornarDadosMercadoPadoJsonMes,
+  PegarDadosMercadoPadoJsonPadrao
+} = require('../controller/gastos/analytics/index');
+
+
 
 
 
@@ -73,8 +80,8 @@ router.get('/produtos/listar-todos', agro.allProduct, authenticateToken);
 router.get('/produtos/delet', agro.deletProduto);
 router.get('/produtos/prvate', authController.privateFunction, authenticateToken);
 router.get('/gatos/cartao', cartao.FaturaCaro);
-router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken );
-router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticateToken );
+router.get('/gatos/list-gastos-total', cartao.buscarGastosUsuario, authenticateToken);
+router.get('/gatos/adicionar-manual', cartao.adicionargastosmanual, authenticateToken);
 router.get('/noticias/ler', noticiasBuscar.listaridNoticia);
 router.get('/noticias/adicionar', noticiasBuscar.AdicionarNoticia);
 router.get('/blog/adicionar', blog.addBlog);
@@ -82,7 +89,7 @@ router.get('/blog/update', blog.updateBlog);
 router.get('/blog/list', blog.ListBlog);
 router.get('/blog/read', blog.readBlog);
 router.get('/blog/list/tags', tag.ListTags);
-router.post('/storage/upload',upload.any() , storage.uploadImagem);
+router.post('/storage/upload', upload.any(), storage.uploadImagem);
 //mirante
 
 router.get('/mirante/list', mirante.produtosMirante);
@@ -93,10 +100,10 @@ router.get('/mirante/list/cupons/atualizar', MIranteCupons.fetchData);
 router.get('/mirante/list/cupons/list', MIranteCupons.ListCupons);
 router.get('/mirante/list/cupons/chart01', MIranteCupons.ChartCupons);
 router.get('/mirante/list/cupons/listNames', MIranteCupons.ListCuponsNames);
-router.post('/mirante/zpl/convert', upload.array('files') , Zpl.zplConvert);
+router.post('/mirante/zpl/convert', upload.array('files'), Zpl.zplConvert);
 //sorteio
 
- 
+
 router.get('/sorteio/cadastrar', sorteio.CadastrarParticipante);
 router.get('/sorteio/realizar', sorteio.RealizarSorteio);
 router.get('/sorteio/visualizar', sorteio.VisualizarSorteio);
@@ -105,11 +112,10 @@ router.get('/charts/gastos', charts.GastosTotais);
 router.get('/charts/saldo', charts.SaldoEmConta);
 
 // gastos
-router.post('/add/gastos/jsonMercadoPago', mercadoPago.PegarDadosMercadoPadoJsonPadrao);
-router.get('/list/gastos/todos', mercadoPago.RetornarDadosMercadoPadoJsonMes);
-router.get('/list/gastos/total', mercadoPago.BuscarGastosTotais);
-
-router.get('/list/gastos/steste', AddCategorias.AtualizarCategorias);
+router.post('/add/gastos/jsonMercadoPago', PegarDadosMercadoPadoJsonPadrao);
+router.get('/list/gastos/todos', RetornarDadosMercadoPadoJsonMes);
+router.get('/list/gastos/total', BuscarGastosTotais);
+router.get('/list/gastos/categorias', BuscarCategoriaDoMes);
 
 
 
