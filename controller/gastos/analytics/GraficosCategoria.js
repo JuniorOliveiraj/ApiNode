@@ -18,7 +18,7 @@ async function BuscarCategoriaDoMesTotal(req, res) {
                 WHERE     
                     YEAR(A.data) = ? AND 
                     MONTH(A.data) = ?       
-                    group by C.nome_categoria , C.icon 
+                    group by C.nome_categoria , C.icon order by saved desc
         `;
 
         const queryGastos = `
