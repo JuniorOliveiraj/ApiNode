@@ -31,7 +31,8 @@ const { BuscarCategoriaDoMes,
   BuscarGastosTotais,
   RetornarDadosMercadoPadoJsonMes,
   PegarDadosMercadoPadoJsonPadrao,
-  BuscarCategoriaDoMesTotal
+  BuscarCategoriaDoMesTotal,
+  AtualizarCategorias
 } = require('../controller/gastos/analytics/index');
 
 
@@ -118,6 +119,7 @@ router.get('/list/gastos/todos', RetornarDadosMercadoPadoJsonMes);
 router.get('/list/gastos/total', BuscarGastosTotais);
 router.get('/list/gastos/categorias', BuscarCategoriaDoMes);
 router.get('/list/gastos/categorias/total', BuscarCategoriaDoMesTotal);
+router.get('/list/gastos/categorias/atualizar', AtualizarCategorias);
 
 
 

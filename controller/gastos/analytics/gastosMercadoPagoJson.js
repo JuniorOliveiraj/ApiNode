@@ -68,7 +68,7 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
 
 
 async function RetornarDadosMercadoPadoJsonMes(req, res) {
-    const { mes, ano } = req.query;
+    const { mes, ano, category } = req.query;
 
     const mesAtual = !mes ? new Date().getMonth() + 1 : mes;
     const anoAtual = !ano ? new Date().getFullYear() : ano;
@@ -91,8 +91,9 @@ async function RetornarDadosMercadoPadoJsonMes(req, res) {
     WHERE     
         YEAR(A.data) = ? AND 
         MONTH(A.data) = ?
+        ${category ? 'AND C.id_categoria = ?' : ''}
         ORDER BY A.data DESC;`;
-    const resultadoVerificacao = await executeQuery(query, [anoAtual, mesAtual]);
+    const resultadoVerificacao = await executeQuery(query, [anoAtual, mesAtual , category].filter(Boolean));
     console.log(resultadoVerificacao)
     return res.status(200).json({ mensagem: 'Sucesso', resultadoVerificacao });
 

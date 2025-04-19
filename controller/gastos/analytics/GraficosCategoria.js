@@ -8,6 +8,7 @@ async function BuscarCategoriaDoMesTotal(req, res) {
         const queryGastosPorCategoria = `
         SELECT 
             C.nome_categoria name ,
+            C.id_categoria id,
             ROUND(SUM(A.valor), 2) AS saved,
             C.icon
                 FROM  gastos_mensais_notion A 
@@ -18,7 +19,7 @@ async function BuscarCategoriaDoMesTotal(req, res) {
                 WHERE     
                     YEAR(A.data) = ? AND 
                     MONTH(A.data) = ?       
-                    group by C.nome_categoria , C.icon order by saved desc
+                    group by C.nome_categoria , C.icon, C.id_categoria order by saved desc
         `;
 
         const queryGastos = `
