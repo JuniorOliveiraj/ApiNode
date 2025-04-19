@@ -120,8 +120,8 @@ async function BuscarGastosTotais(req, res) {
             gastos_mensais_notion
         WHERE
         YEAR(data) = ? AND 
-         AND STATUS <> "Inativo"   
-        MONTH(data) = ?;
+        MONTH(data) = ?
+        AND STATUS <> "Inativo"   
     `;
 
     const queryMesGasto = `
@@ -132,8 +132,8 @@ async function BuscarGastosTotais(req, res) {
         WHERE
         YEAR(data) = ? AND 
         MONTH(data) = ?
-         AND STATUS <> "Inativo"   
-        GROUP BY 'Mes';
+        AND STATUS <> "Inativo"   
+        GROUP BY 'Mes'
     `;
 
     try {
