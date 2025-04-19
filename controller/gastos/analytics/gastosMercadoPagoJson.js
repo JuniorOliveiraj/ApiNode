@@ -44,7 +44,7 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
 
         // Se não existir o registro, adicionar à lista de inserção
         if (resultadoVerificacao && resultadoVerificacao[0] && resultadoVerificacao[0].total === 0) {
-            valoresParaInserir.push([nome, amount, amount, description, date, imageUrl, origin]);
+            valoresParaInserir.push([nome, amount, amount, description, date, imageUrl, origin, status='Concluído' ]);
         }
     }
 
@@ -52,7 +52,7 @@ async function PegarDadosMercadoPadoJsonPadrao(req, res) {
     if (valoresParaInserir.length > 0) {
         const insertQuery = `
             INSERT INTO gastos_mensais_notion 
-            ( name, gasto_esse_mes, valor, descricao, data, avatarImage, conta_origem) 
+            ( name, gasto_esse_mes, valor, descricao, data, avatarImage, conta_origem, status) 
             VALUES ?
         `;
         const insertResult = await executeQuery(insertQuery, [valoresParaInserir]);
@@ -91,6 +91,7 @@ async function RetornarDadosMercadoPadoJsonMes(req, res) {
     WHERE     
         YEAR(A.data) = ? AND 
         MONTH(A.data) = ?
+        AND STATUS <> "Inativo"   
         ${category ? 'AND C.id_categoria = ?' : ''}
         ORDER BY A.data DESC;`;
     const resultadoVerificacao = await executeQuery(query, [anoAtual, mesAtual , category].filter(Boolean));
@@ -119,6 +120,7 @@ async function BuscarGastosTotais(req, res) {
             gastos_mensais_notion
         WHERE
         YEAR(data) = ? AND 
+         AND STATUS <> "Inativo"   
         MONTH(data) = ?;
     `;
 
@@ -130,6 +132,7 @@ async function BuscarGastosTotais(req, res) {
         WHERE
         YEAR(data) = ? AND 
         MONTH(data) = ?
+         AND STATUS <> "Inativo"   
         GROUP BY 'Mes';
     `;
 

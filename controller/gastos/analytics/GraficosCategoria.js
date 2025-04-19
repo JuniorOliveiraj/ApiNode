@@ -18,7 +18,8 @@ async function BuscarCategoriaDoMesTotal(req, res) {
                     categorias_compras C ON B.id_categoria = C.id_categoria    
                 WHERE     
                     YEAR(A.data) = ? AND 
-                    MONTH(A.data) = ?       
+                    MONTH(A.data) = ?      
+                     AND STATUS <> "Inativo"    
                     group by C.nome_categoria , C.icon, C.id_categoria order by saved desc
         `;
 
@@ -33,6 +34,7 @@ async function BuscarCategoriaDoMesTotal(req, res) {
                 WHERE     
                     YEAR(A.data) = ? AND 
                     MONTH(A.data) = ? 
+                     AND STATUS <> "Inativo"   
         `
         const resultadoGastosPorCategoria = await execut.executeQuery(queryGastosPorCategoria, [anoAtual, mesAtual]);
         const resultadoGastos = await execut.executeQuery(queryGastos, [anoAtual, mesAtual]);
@@ -73,7 +75,8 @@ async function BuscarCategoriaDoMes(req, res) {
                     categorias_compras C ON B.id_categoria = C.id_categoria    
                 WHERE     
                     YEAR(A.data) = ? AND 
-                    MONTH(A.data) = ?       
+                    MONTH(A.data) = ?    
+                     AND STATUS <> "Inativo"      
                     group by C.nome_categoria 
         `;
 
