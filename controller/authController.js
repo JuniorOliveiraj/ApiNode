@@ -4,21 +4,17 @@ const jwt = require('jsonwebtoken');
 const key = '$2y$10MFKDgDBujKwY.VZi/DH6JuR58ISGjlS6mlEobHlmhX9zQ.Ha4c3qC2';
 
 function register(req, res) {
-  const name = req.query.name;
+  const nome = req.query.name;
   const email = req.query.email;
-  const password = req.query.password;
+  const senha = req.query.password;
 
-  // Verifique se todos os campos foram preenchidos
-  if (!name || !email || !password) {
+  if (!nome || !email || !senha) {
     return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
   }
 
+  const hashedPassword = senha; // Substitua por bcrypt se quiser segurança
 
-  // Criptografe a senha do usuário antes de salvar no banco de dados
-  const hashedPassword = password; // Modifique aqui para usar uma biblioteca de criptografia como bcrypt.js
-
-  // Verifique se o email já está em uso
-  connection.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+  connection.query('SELECT * FROM Z_USUARIOS WHERE EMAIL = ?', [email], (err, results) => {
     if (err) {
       console.error('Erro ao consultar o banco de dados:', err);
       return res.status(500).json({ error: 'Erro interno do servidor.' });
@@ -28,186 +24,153 @@ function register(req, res) {
       return res.status(400).json({ error: 'Este email já está em uso.' });
     }
 
-    // Salve o usuário no banco de dados
-    const user = { name, email, password: hashedPassword, role: 'convidado', status: 1, permission_level: 'convidado' };
-    connection.query('INSERT INTO users SET ?', user, (err, result) => {
+    const user = {
+      NOME: nome,
+      EMAIL: email,
+      SENHA: hashedPassword,
+      PAPEL: 'convidado',
+      STATUS: 1,
+    };
+
+    connection.query('INSERT INTO Z_USUARIOS SET ?', user, (err, result) => {
       if (err) {
         console.error('Erro ao inserir o usuário no banco de dados:', err);
         return res.status(500).json({ error: 'Erro interno do servidor.' });
       }
 
       const userId = result.insertId;
-
-      // Gerar um token de autenticação usando a biblioteca JWT
       const token = jwt.sign({ user_id: userId }, key, { algorithm: 'HS256' });
 
-      // Retornar o token como resposta
       return res.status(201).json({
         message: 'Usuário criado com sucesso.',
         token,
         userId,
-        user
+        user,
       });
     });
   });
 }
+
 function login(req, res) {
   const email = req.query.email;
-  const password = req.query.password;
-  // Verificar se todas as credenciais foram fornecidas
-  if (!email) {
-    return res.status(401).json({ error: 'E-mail obrigatório.' });
+  const senha = req.query.password;
+
+  if (!email || !senha) {
+    return res.status(401).json({ error: 'E-mail e senha são obrigatórios.' });
   }
-  if (!password) {
-    return res.status(401).json({ error: 'Senha obrigatória.' });
-  }
-  // Verificar se as credenciais são válidas
-  connection.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+
+  connection.query('SELECT * FROM Z_USUARIOS WHERE EMAIL = ?', [email], (err, results) => {
     if (err) {
       console.error('Erro ao consultar o banco de dados:', err);
       return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
 
     if (results.length === 0) {
-      // Caso o resultado da consulta seja vazio, significa que o e-mail é inválido
-      return res.status(401).json({ error: 'email incorreto.' });
+      return res.status(401).json({ error: 'Email incorreto.' });
     }
 
     const user = results[0];
 
-    if (user.password !== password) {
-      // Caso a senha não corresponda à senha do usuário, retorna senha inválida
+    if (user.SENHA !== senha) {
       return res.status(401).json({ error: 'Senha inválida.' });
     }
 
-    // Gerar um token de autenticação usando a biblioteca JWT
-    const token = jwt.sign({ user_id: user.id }, key, { algorithm: 'HS256' });
-    // Retornar o token como resposta
+    const token = jwt.sign({ user_id: user.ID }, key, { algorithm: 'HS256' });
+
     return res.json({ token, user });
   });
-
 }
 
 function privateFunction(req, res) {
-  // Verificar se o token de acesso foi fornecido
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ error: 'Token de acesso não fornecido.' });
   }
   try {
-    // Verificar se o token é válido e decodificar os dados do usuário
     const decoded = jwt.verify(token, key);
-    // Aqui você pode realizar qualquer lógica que desejar
-    // Retornar um JSON qualquer como resposta
     return res.status(200).json({ message: 'Função privada executada com sucesso.' });
   } catch (error) {
-    // O token é inválido ou expirou
     return res.status(401).json({ error: 'Token de acesso inválido ou expirado.' });
   }
 }
+
 const userList = async (req, res) => {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ error: 'Token de acesso não fornecido.' });
   }
+
   try {
-    // Verificar se o token é válido e decodificar os dados do usuário
     const decoded = jwt.verify(token, key);
     if (decoded) {
-
-
-      connection.query('SELECT * FROM users', (err, results) => {
+      connection.query('SELECT * FROM Z_USUARIOS', (err, results) => {
         if (err) {
           console.error('Erro ao consultar o banco de dados:', err);
           return res.status(500).json({ error: 'Erro interno do servidor.' });
         }
 
-        if (results.length > 0) {
-          const usersAll = results.map(user => ({
-            id: user.id,
-            avatarUrl: user.avatarUrl,
-            name: user.name,
-            role: user.role,
-            isVerified: true,
-            status: user.status === 1 ? 'active' : 'não',
-            permission_level: user.permission_level,
-          }));
-          return res.status(200).json({ usersAll });
-        } else {
-          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado' });
-        }
+        const usersAll = results.map(user => ({
+          id: user.ID,
+          avatarUrl: user.FOTO,
+          name: user.NOME,
+          role: user.PAPEL,
+          isVerified: true,
+          status: user.STATUS === 1 ? 'active' : 'não',
+        }));
+
+        return res.status(200).json({ usersAll });
       });
     }
   } catch (err) {
     return res.status(500).json({ error: 'Token de acesso expirado ou invalido' });
   }
-}
-
-
-
-
+};
 
 function updateUser(req, res) {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ message: 'Token de autorização não fornecido' });
+
   const { userID, form, urlImg } = req.query;
   if (!userID || !form || !urlImg) {
-    res.status(500).json({ message: 'todos os dados devem ser mandado na requisição', });
+    return res.status(500).json({ message: 'todos os dados devem ser mandados na requisição' });
   }
-  const { email, displayName, permission_level, role } = form;
-  if (!email || !displayName || !permission_level || !role) {
-    res.status(500).json({ message: 'form vazio', form: form });
+
+  const { email, displayName, role } = form;
+  if (!email || !displayName || !role) {
+    return res.status(500).json({ message: 'form vazio', form });
   }
+
   const decoded = jwt.verify(token, key);
   if (decoded) {
-    // Montar a query SQL
-
-    // Montar a query SQL base
-    let sql = `UPDATE users SET `;
+    let sql = `UPDATE Z_USUARIOS SET `;
     const columns = Object.keys(form).filter(key => form[key] !== undefined);
-    const placeholders = columns.map(() => `?`).join(', ');
+    sql += columns.map(column => {
+      const newCol = column === 'displayName' ? 'NOME' : column.toUpperCase();
+      return `${newCol} = ?`;
+    }).join(', ');
 
-    sql += columns.map(column => `${column} = ?`).join(', ');
-
-    // Montar o array de valores
-    const values = columns.map(column => form[column]);
-
-    sql += ' WHERE id = ?';
+    const values = columns.map(key => form[key]);
+    sql += ' WHERE ID = ?';
     values.push(userID);
-    // Executar a query no banco de dados
-    console.log(sql, values,);
 
     connection.query(sql, values, (err, result) => {
       if (err) {
         console.error('Erro ao atualizar o usuário:', err);
-        res.status(500).json({ error: 'Erro ao atualizar o usuário' });
-      } else {
-        const sql2 = 'select * from users where id = ?'
-        console.log('Usuário atualizado com sucesso!');
-        connection.query(sql2, [userID], (error, result2) => {
-          if (error) {
-            res.status(500).json({ message: 'Erro interno do servidor. Nada encontrado.' });
-          } else {
-            const row = result2[0];
-            row.token = token; // Adiciona a propriedade token ao objeto
-
-            res.status(200).json({ message: 'Usuário atualizado com sucesso!', user: row });
-          }
-        });
-
-
+        return res.status(500).json({ error: 'Erro ao atualizar o usuário' });
       }
+
+      connection.query('SELECT * FROM Z_USUARIOS WHERE ID = ?', [userID], (error, result2) => {
+        if (error) {
+          return res.status(500).json({ message: 'Erro interno do servidor. Nada encontrado.' });
+        } else {
+          const row = result2[0];
+          row.token = token;
+          return res.status(200).json({ message: 'Usuário atualizado com sucesso!', user: row });
+        }
+      });
     });
-
-
   }
 }
-
-
-
-
-
-
 
 const loaduser = async (req, res) => {
   const { authorization, id } = req.headers;
@@ -218,24 +181,23 @@ const loaduser = async (req, res) => {
   try {
     const decoded = jwt.verify(authorization, key);
     if (decoded) {
-      connection.query('select * from users where id = ?', [id], (err, results) => {
+      connection.query('SELECT * FROM Z_USUARIOS WHERE ID = ?', [id], (err, results) => {
         if (err) {
-          console.error('Erro ao consultar o banco de dados:', err);
           return res.status(500).json({ error: 'Erro interno do servidor.' });
         }
+
         if (results.length > 0) {
           return res.status(200).json({ user: results, token: authorization });
         } else {
-          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado', });
+          return res.status(500).json({ error: 'Erro interno do servidor. nada encontrado' });
         }
       });
     }
   } catch (error) {
-    console.log(error)
-    return res.status(401).json({ error: 'usuario não autorizado' });
+    return res.status(401).json({ error: 'usuário não autorizado' });
   }
+};
 
-}
 module.exports = {
   register,
   login,

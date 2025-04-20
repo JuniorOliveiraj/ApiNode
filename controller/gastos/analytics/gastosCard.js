@@ -22,11 +22,11 @@ async function balanceCard(req, res) {
         SELECT c.id, 
         SUM(g.compra_valor) as balance,
         c.cardType,
-        u.displayName as cardHolder,
+        u.NOME as cardHolder,
         c.cardNumber,
         c.cardValid
         
-        FROM users u
+        FROM Z_USUARIOS u
         JOIN cards c ON u.id = c.id_user
         JOIN compras_cartao g ON c.id = g.id_card
         WHERE u.id = 9 and c.id=1`

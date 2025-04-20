@@ -17,10 +17,10 @@ const updateuseradm = async (req, res) => {
     }
     const decoded = jwt.verify(authorization, key);
     if (decoded) {
-        const checkeduser = 'SELECT * FROM users where id = ? '
+        const checkeduser = 'SELECT * FROM Z_USUARIOS where id = ? '
         const user = await executeQuery(checkeduser, [userID]);
         if (user[0].permission_level  === 'ADM') {
-            const sqlUpdate = 'UPDATE  users SET permission_level = ? WHERE (id = ?)'
+            const sqlUpdate = 'UPDATE  Z_USUARIOS SET PAPEL = ? WHERE (id = ?)'
             const updateUser = await executeQuery(sqlUpdate, [cargo, userSelct])
             return res.status(200).json({ mensagem: 'ok', user });
         } else {

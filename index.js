@@ -8,7 +8,7 @@ server.use(express.json());
 
 
 server.use('/api', createProxyMiddleware({
-  target: 'http://local.juniorbelem.com:3001', // Substitua pelo endereço e porta da sua API C#
+  target: 'http://local.juniorbelem.com:3001',  
   changeOrigin: true,
 
   onProxyReq: (proxyReq, req, res) => {
