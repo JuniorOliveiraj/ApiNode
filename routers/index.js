@@ -124,4 +124,5 @@ router.get('/list/gastos/categorias/atualizar', AtualizarCategorias);
 
 
 
+
 module.exports = router;
